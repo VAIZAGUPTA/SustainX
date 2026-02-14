@@ -313,37 +313,199 @@
             padding: 1.2rem 3rem;
             font-size: 1.1rem;
             font-weight: 600;
-            border: none;
+            border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 16px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-light);
+            backdrop-filter: blur(10px);
         }
 
-        .btn-primary {
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn.active {
             background: linear-gradient(135deg, #00d9a3, #00b894);
             color: #0d1117;
+            border-color: transparent;
             box-shadow: 0 10px 40px rgba(0, 217, 163, 0.3);
             font-weight: 700;
         }
 
-        .btn-primary:hover {
+        .btn.active:hover {
             transform: translateY(-3px);
             box-shadow: 0 15px 50px rgba(0, 217, 163, 0.5);
         }
 
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.05);
-            color: white;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(167, 139, 250, 0.3);
+        /* Demo Section */
+        .demo-section {
+            padding: 10rem 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        .btn-secondary:hover {
-            background: rgba(167, 139, 250, 0.1);
-            border-color: rgba(167, 139, 250, 0.5);
-            transform: translateY(-3px);
+        .demo-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-top: 4rem;
+        }
+
+        .demo-upload-area {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        .upload-box {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 2px dashed rgba(0, 217, 163, 0.3);
+            border-radius: 32px;
+            padding: 4rem 3rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-box:hover {
+            border-color: rgba(0, 217, 163, 0.6);
+            background: rgba(0, 217, 163, 0.05);
+            transform: translateY(-5px);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-box h3 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .upload-box p {
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+        }
+
+        .example-images h4 {
+            text-align: center;
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
+        .example-item {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 2rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .example-item:hover {
+            background: rgba(0, 217, 163, 0.1);
+            border-color: rgba(0, 217, 163, 0.4);
+            transform: translateY(-5px);
+        }
+
+        .example-item span {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .example-item p {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin: 0;
+        }
+
+        .demo-result-area {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .result-image-container {
+            position: relative;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 32px;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        .result-image-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            display: block;
+        }
+
+        #detectionCanvas {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            pointer-events: none;
+            border-radius: 20px;
+        }
+
+        .detection-info {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 32px;
+            padding: 2.5rem;
+        }
+
+        .detection-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .detection-stat:last-of-type {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+
+        .detection-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .detection-actions .btn {
+            flex: 1;
+            min-width: 200px;
         }
 
         /* Stats Section */
@@ -573,6 +735,23 @@
                 margin: 2rem auto 3rem;
             }
 
+            .demo-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .example-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .detection-actions {
+                flex-direction: column;
+            }
+
+            .detection-actions .btn {
+                min-width: 100%;
+            }
+
             .stats {
                 padding: 6rem 2rem;
                 gap: 2.5rem;
@@ -647,14 +826,14 @@
             <div class="logo">
                 <div>
                     <div class="logo-text">🌿 SustainX</div>
-                    <div class="tagline">"The Future Feels What You Do"</div>
+                    <div class="tagline">"Upload. Detect. Report. Change."</div>
                 </div>
             </div>
             <div class="nav-links">
                 <a href="#features">Features</a>
                 <a href="#impact">Impact</a>
                 <a href="#about">About</a>
-                <button class="btn btn-primary" style="padding: 0.7rem 1.8rem; font-size: 0.95rem;">Get Started</button>
+                <button class="btn active" style="padding: 0.7rem 1.8rem; font-size: 0.95rem;">Get Started</button>
             </div>
         </div>
     </nav>
@@ -666,8 +845,8 @@
         </div>
         
         <div class="hero-content">
-            <h1>Small Choices. Massive Impact.</h1>
-            <p>Your personal AI-powered sustainability companion that transforms daily habits into planetary healing</p>
+            <h1>Citizen-Powered Environmental Monitoring</h1>
+            <p>Upload a photo. AI detects the problem. Together we create change. Transform your smartphone into a powerful environmental monitoring tool.</p>
             
             <div class="earth-container">
                 <div class="earth-glow"></div>
@@ -677,8 +856,75 @@
             </div>
 
             <div class="cta-buttons">
-                <button class="btn btn-primary" onclick="scrollToSection('features')">Calculate My Earth</button>
-                <button class="btn btn-secondary" onclick="openAI()">Talk to AI Mentor</button>
+                <button class="btn" id="earth-btn" onclick="scrollToFeature('ai-detection', 'earth-btn')">Upload & Detect</button>
+                <button class="btn" id="mentor-btn" onclick="scrollToFeature('ai-mentor', 'mentor-btn')">Talk to AI Mentor</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Detection Demo Section -->
+    <section class="demo-section" id="demo">
+        <div class="section-header">
+            <h2>See AI Detection in Action</h2>
+            <p>Upload or select an example to watch real-time environmental problem detection</p>
+        </div>
+
+        <div class="demo-container">
+            <div class="demo-upload-area">
+                <div class="upload-box" id="uploadBox">
+                    <div class="upload-icon">📸</div>
+                    <h3>Upload Image</h3>
+                    <p>Drop an image or click to upload</p>
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                    <button class="btn active" onclick="document.getElementById('fileInput').click()">Choose File</button>
+                </div>
+                
+                <div class="example-images">
+                    <h4 style="margin-bottom: 1rem; color: var(--text-dim);">Or try an example:</h4>
+                    <div class="example-grid">
+                        <div class="example-item" onclick="loadExample('garbage')">
+                            <span>🗑️</span>
+                            <p>Garbage</p>
+                        </div>
+                        <div class="example-item" onclick="loadExample('water')">
+                            <span>💧</span>
+                            <p>Water Pollution</p>
+                        </div>
+                        <div class="example-item" onclick="loadExample('road')">
+                            <span>🛣️</span>
+                            <p>Road Crack</p>
+                        </div>
+                        <div class="example-item" onclick="loadExample('forest')">
+                            <span>🌳</span>
+                            <p>Deforestation</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="demo-result-area" id="resultArea" style="display: none;">
+                <div class="result-image-container">
+                    <img id="resultImage" alt="Analyzed image">
+                    <canvas id="detectionCanvas"></canvas>
+                </div>
+                <div class="detection-info">
+                    <div class="detection-stat">
+                        <span class="stat-label">Problem Type</span>
+                        <span class="stat-value" id="problemType">-</span>
+                    </div>
+                    <div class="detection-stat">
+                        <span class="stat-label">Severity</span>
+                        <span class="stat-value" id="severity">-</span>
+                    </div>
+                    <div class="detection-stat">
+                        <span class="stat-label">Confidence</span>
+                        <span class="stat-value" id="confidence">-</span>
+                    </div>
+                    <div class="detection-actions">
+                        <button class="btn active">📍 Report to Authorities</button>
+                        <button class="btn">🗺️ View Location</button>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -686,65 +932,83 @@
     <!-- Stats Section -->
     <section class="stats">
         <div class="stat-card">
-            <div class="stat-number">450</div>
-            <div class="stat-label">Years for Plastic to Decompose</div>
-        </div>
-        <div class="stat-card">
             <div class="stat-number">8M+</div>
-            <div class="stat-label">Tons of Plastic in Oceans</div>
+            <div class="stat-label">Tons of Plastic in Oceans Yearly</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number">67%</div>
-            <div class="stat-label">Waste Not Segregated Properly</div>
+            <div class="stat-number">15M</div>
+            <div class="stat-label">Hectares Deforested Annually</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number">2030</div>
-            <div class="stat-label">Climate Action Deadline</div>
+            <div class="stat-number">91%</div>
+            <div class="stat-label">Of People Breathe Polluted Air</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">AI+You</div>
+            <div class="stat-label">Citizen-Powered Change</div>
         </div>
     </section>
 
     <!-- Features Section -->
     <section class="features" id="features">
         <div class="section-header">
-            <h2>Know Before You Throw</h2>
-            <p>Intelligent features that make sustainability measurable, actionable, and rewarding</p>
+            <h2>AI-Powered Environmental Detection</h2>
+            <p>Real-time image analysis for multiple environmental issues - from garbage to deforestation</p>
         </div>
 
         <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">🌍</div>
-                <h3>AI Earth Twin</h3>
-                <p>Your personal digital Earth that evolves based on your daily choices. Watch it flourish with eco-friendly habits or wither with wasteful ones. Real-time visual feedback makes impact tangible.</p>
+            <div class="feature-card" id="ai-detection">
+                <div class="feature-icon">📸</div>
+                <h3>Smart Image Detection</h3>
+                <p>Upload any environmental photo. Our AI instantly detects garbage, pollution, road cracks, deforestation, and more. Get real-time detection overlays with highlighted problem areas.</p>
             </div>
 
-            <div class="feature-card">
+            <div class="feature-card" id="ai-mentor">
                 <div class="feature-icon">🧠</div>
                 <h3>AI Eco Mentor</h3>
-                <p>Intelligent conversational AI that understands your location, lifestyle, and goals. Get personalized eco-action plans, local pollution data, and custom sustainability roadmaps.</p>
+                <p>Your personal AI sustainability advisor. Get instant answers about environmental issues, waste disposal, local pollution data, and personalized eco-action plans. Chat 24/7 with your intelligent guide.</p>
             </div>
 
             <div class="feature-card">
-                <div class="feature-icon">📊</div>
-                <h3>Carbon Footprint Tracker</h3>
-                <p>Track electricity, water, transport, and plastic usage in real-time. Visualize your daily, weekly, and monthly impact with beautiful data insights and actionable recommendations.</p>
+                <div class="feature-icon">🚮</div>
+                <h3>Garbage Detection</h3>
+                <p>Detect litter in parks, streets, and rivers. AI identifies trash piles, categorizes waste types, and generates cleanup priority zones. Turn every citizen into an eco-warrior.</p>
             </div>
 
             <div class="feature-card">
-                <div class="feature-icon">♻️</div>
-                <h3>Smart Waste Assistant</h3>
-                <p>Type or scan any product to instantly know its decomposition time, recyclability score, carbon impact, and better eco-friendly alternatives. Knowledge at your fingertips.</p>
+                <div class="feature-icon">🌳</div>
+                <h3>Deforestation Monitoring</h3>
+                <p>Upload satellite or drone images. Detect illegal tree cutting, sparse green cover, and forest degradation. Track reforestation progress over time with AI-powered analysis.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">💧</div>
+                <h3>Water Pollution Tracker</h3>
+                <p>Identify polluted water bodies from photos. AI detects trash, oil spills, foam, and algae blooms. Create water quality reports and alert local authorities automatically.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🏙️</div>
+                <h3>Air Quality Analysis</h3>
+                <p>Estimate smog and dust levels from images. Upload photos to get pollution severity scores. Build a crowdsourced air quality database for your neighborhood.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🦋</div>
+                <h3>Wildlife Monitoring</h3>
+                <p>Detect endangered species and invasive plants. Upload wildlife photos for instant species identification. Map biodiversity hotspots and track ecosystem health.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🛣️</div>
+                <h3>Road Crack Detection</h3>
+                <p>Identify infrastructure issues instantly. AI detects road cracks, potholes, and damaged pavements. Report problems directly to municipal authorities with location data.</p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">🏆</div>
-                <h3>Gamified Rewards</h3>
-                <p>Earn SustainX Points for every green action. Compete on city-wide leaderboards, unlock digital badges, and join weekly eco-challenges with your community.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">🔮</div>
-                <h3>Future Vision Mode</h3>
-                <p>Experience two parallel futures. Toggle between a sustainable world and a climate-ignored reality. Powerful visual storytelling that drives behavioral change.</p>
+                <h3>Eco-Warrior Leaderboard</h3>
+                <p>Earn points for every issue reported. Compete with neighbors, unlock badges, and climb the leaderboard. Gamified environmental action that drives real change.</p>
             </div>
         </div>
     </section>
@@ -776,16 +1040,150 @@
     <section class="cta-section">
         <h2>Ready to Create Your Impact?</h2>
         <p style="color: var(--text-dim); margin-bottom: 2rem; font-size: 1.2rem;">Join thousands making sustainability measurable</p>
-        <button class="btn btn-primary" style="font-size: 1.2rem; padding: 1.2rem 3rem;">Start Your Journey</button>
+        <button class="btn active" style="font-size: 1.2rem; padding: 1.2rem 3rem;">Start Your Journey</button>
     </section>
 
     <!-- Floating AI Assistant -->
-    <div class="ai-assistant" onclick="openAI()">
+    <div class="ai-assistant" onclick="scrollToFeature('ai-mentor', 'mentor-btn')">
         <div class="ai-pulse"></div>
         <span>🤖</span>
     </div>
 
     <script>
+        // Demo functionality
+        const fileInput = document.getElementById('fileInput');
+        const resultArea = document.getElementById('resultArea');
+        const resultImage = document.getElementById('resultImage');
+        const detectionCanvas = document.getElementById('detectionCanvas');
+        const ctx = detectionCanvas ? detectionCanvas.getContext('2d') : null;
+
+        // Handle file upload
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    processImage(event.target.result, 'garbage');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Load example image
+        function loadExample(type) {
+            // Simulate loading and detection
+            resultArea.style.display = 'flex';
+            
+            // Example detection data based on type
+            const exampleData = {
+                garbage: {
+                    type: 'Garbage / Litter',
+                    severity: 'High',
+                    confidence: '94.2%',
+                    color: '#ff6b6b',
+                    boxes: [
+                        {x: 20, y: 15, w: 30, h: 25},
+                        {x: 55, y: 40, w: 25, h: 20}
+                    ]
+                },
+                water: {
+                    type: 'Water Pollution',
+                    severity: 'Medium',
+                    confidence: '87.5%',
+                    color: '#4ecdc4',
+                    boxes: [
+                        {x: 30, y: 30, w: 40, h: 35}
+                    ]
+                },
+                road: {
+                    type: 'Road Crack',
+                    severity: 'Medium',
+                    confidence: '91.8%',
+                    color: '#ffd93d',
+                    boxes: [
+                        {x: 25, y: 45, w: 50, h: 15}
+                    ]
+                },
+                forest: {
+                    type: 'Deforestation',
+                    severity: 'Critical',
+                    confidence: '96.3%',
+                    color: '#ff6b9d',
+                    boxes: [
+                        {x: 10, y: 10, w: 80, h: 60}
+                    ]
+                }
+            };
+
+            const data = exampleData[type];
+            
+            // Update detection info
+            document.getElementById('problemType').textContent = data.type;
+            document.getElementById('severity').textContent = data.severity;
+            document.getElementById('confidence').textContent = data.confidence;
+
+            // Create a placeholder image with detection boxes
+            createDemoImage(data);
+            
+            // Scroll to result
+            resultArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function createDemoImage(data) {
+            // Create a canvas to draw demo image
+            const demoCanvas = document.createElement('canvas');
+            demoCanvas.width = 600;
+            demoCanvas.height = 400;
+            const demoCtx = demoCanvas.getContext('2d');
+            
+            // Draw placeholder background
+            const gradient = demoCtx.createLinearGradient(0, 0, 600, 400);
+            gradient.addColorStop(0, '#1a1f2e');
+            gradient.addColorStop(1, '#0f1419');
+            demoCtx.fillStyle = gradient;
+            demoCtx.fillRect(0, 0, 600, 400);
+            
+            // Draw detection boxes
+            demoCtx.strokeStyle = data.color;
+            demoCtx.lineWidth = 3;
+            demoCtx.setLineDash([5, 5]);
+            
+            data.boxes.forEach(box => {
+                const x = (box.x / 100) * 600;
+                const y = (box.y / 100) * 400;
+                const w = (box.w / 100) * 600;
+                const h = (box.h / 100) * 400;
+                
+                demoCtx.strokeRect(x, y, w, h);
+                
+                // Draw label
+                demoCtx.fillStyle = data.color;
+                demoCtx.fillRect(x, y - 25, w, 25);
+                demoCtx.fillStyle = '#0d1117';
+                demoCtx.font = 'bold 14px Inter';
+                demoCtx.fillText(data.type, x + 5, y - 8);
+            });
+            
+            // Set as result image
+            resultImage.src = demoCanvas.toDataURL();
+            
+            // Setup detection canvas overlay
+            resultImage.onload = function() {
+                detectionCanvas.width = resultImage.clientWidth;
+                detectionCanvas.height = resultImage.clientHeight;
+            };
+        }
+
+        function processImage(imageSrc, detectionType) {
+            resultArea.style.display = 'flex';
+            resultImage.src = imageSrc;
+            
+            // Simulate AI detection (in real app, this would call your backend)
+            setTimeout(() => {
+                loadExample(detectionType);
+            }, 500);
+        }
+
         // Create floating particles
         const particlesContainer = document.getElementById('particles');
         for (let i = 0; i < 15; i++) {
@@ -798,7 +1196,40 @@
             particlesContainer.appendChild(particle);
         }
 
-        // Smooth scroll
+        // Smooth scroll to specific feature and highlight it
+        function scrollToFeature(featureId, buttonId) {
+            const element = document.getElementById(featureId);
+            const button = document.getElementById(buttonId);
+            
+            // Remove active class from all CTA buttons
+            document.querySelectorAll('.cta-buttons .btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            if (button) {
+                button.classList.add('active');
+            }
+            
+            if (element) {
+                // Scroll to the element
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Add highlight effect
+                element.style.transform = 'scale(1.05)';
+                element.style.boxShadow = '0 30px 80px rgba(0, 217, 163, 0.4), 0 0 0 3px rgba(0, 217, 163, 0.3)';
+                element.style.border = '1px solid rgba(0, 217, 163, 0.5)';
+                
+                // Remove highlight after 3 seconds
+                setTimeout(() => {
+                    element.style.transform = '';
+                    element.style.boxShadow = '';
+                    element.style.border = '';
+                }, 3000);
+            }
+        }
+
+        // Smooth scroll (for navigation links)
         function scrollToSection(id) {
             document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
         }
@@ -818,11 +1249,6 @@
                 }
             });
         });
-
-        // AI Assistant
-        function openAI() {
-            alert('🤖 AI Eco Mentor: "Hello! I\'m your personal sustainability guide. Tell me about your lifestyle and I\'ll create a custom eco-action plan for you. What would you like to know?"');
-        }
 
         // Add scroll animations
         const observerOptions = {
