@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SustainX - Small Choices. Massive Impact.</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
             --primary-green: #00d9a3;
@@ -31,11 +27,7 @@
         }
 
         .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
             padding: 1.5rem 4rem;
             backdrop-filter: blur(20px);
             background: rgba(13, 17, 23, 0.7);
@@ -43,59 +35,50 @@
         }
 
         .nav-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            max-width: 1400px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
         }
 
         .logo { display: flex; align-items: center; gap: 1rem; }
 
         .logo-text {
-            font-size: 1.8rem;
-            font-weight: 800;
+            font-size: 1.8rem; font-weight: 800;
             background: linear-gradient(135deg, #00d9a3, #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
 
         .tagline { font-size: 0.9rem; color: var(--text-dim); font-weight: 400; }
 
-        .nav-links { display: flex; gap: 2.5rem; align-items: center; }
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
 
         .nav-links a {
-            color: var(--text-dim);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
+            color: var(--text-dim); text-decoration: none; font-weight: 500;
+            transition: color 0.3s ease; font-size: 0.95rem;
         }
-
         .nav-links a:hover { color: var(--primary-green); }
 
+        .nav-btn {
+            padding: 0.6rem 1.5rem; font-size: 0.9rem; font-weight: 600;
+            border: none; border-radius: 12px; cursor: pointer;
+            background: linear-gradient(135deg, #00d9a3, #00b894);
+            color: #0d1117; text-decoration: none; display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,217,163,0.4); }
+
+        /* HERO */
         .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-            padding-top: 100px;
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden; padding-top: 100px;
         }
 
         .hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.2; z-index: 0; }
-
         .particles { position: absolute; width: 100%; height: 100%; }
 
         .particle {
-            position: absolute;
-            width: 1.5px;
-            height: 1.5px;
-            background: var(--accent-glow);
-            border-radius: 50%;
-            animation: float 20s infinite;
-            opacity: 0.25;
+            position: absolute; width: 1.5px; height: 1.5px;
+            background: var(--accent-glow); border-radius: 50%;
+            animation: float 20s infinite; opacity: 0.25;
         }
 
         @keyframes float {
@@ -104,50 +87,32 @@
         }
 
         .hero-content {
-            position: relative;
-            z-index: 1;
-            text-align: center;
-            padding: 4rem 2rem;
-            max-width: 1200px;
+            position: relative; z-index: 1;
+            text-align: center; padding: 4rem 2rem; max-width: 1200px;
         }
 
         .hero h1 {
-            font-size: clamp(2.2rem, 5.5vw, 4rem);
-            font-weight: 800;
+            font-size: clamp(2.2rem, 5.5vw, 4rem); font-weight: 800;
             background: linear-gradient(135deg, #00d9a3, #a78bfa, #ff6b9d);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 2rem;
-            animation: fadeInUp 1s ease-out;
-            letter-spacing: -0.02em;
-            line-height: 1.2;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            margin-bottom: 2rem; animation: fadeInUp 1s ease-out;
+            letter-spacing: -0.02em; line-height: 1.2;
         }
 
         .hero p {
-            font-size: clamp(1rem, 2vw, 1.3rem);
-            color: var(--text-dim);
-            margin-bottom: 3.5rem;
-            animation: fadeInUp 1s ease-out 0.2s backwards;
-            max-width: 650px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.8;
+            font-size: clamp(1rem, 2vw, 1.3rem); color: var(--text-dim);
+            margin-bottom: 3.5rem; animation: fadeInUp 1s ease-out 0.2s backwards;
+            max-width: 650px; margin-left: auto; margin-right: auto; line-height: 1.8;
         }
 
         .earth-container {
-            position: relative;
-            width: 320px;
-            height: 320px;
-            margin: 3rem auto 4rem;
-            animation: fadeInUp 1s ease-out 0.4s backwards;
+            position: relative; width: 320px; height: 320px;
+            margin: 3rem auto 4rem; animation: fadeInUp 1s ease-out 0.4s backwards;
         }
 
         .earth {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: 
+            width: 100%; height: 100%; border-radius: 50%;
+            background:
                 radial-gradient(circle at 45% 35%, #8B7355 0%, transparent 8%),
                 radial-gradient(circle at 50% 40%, #7CB342 0%, transparent 12%),
                 radial-gradient(circle at 35% 55%, #5D8B3A 0%, transparent 15%),
@@ -160,281 +125,216 @@
                 radial-gradient(ellipse at 80% 30%, rgba(255,255,255,0.7) 0%, transparent 5%),
                 radial-gradient(ellipse at 20% 70%, rgba(255,255,255,0.75) 0%, transparent 6%),
                 radial-gradient(ellipse at 50% 50%, #1565C0 20%, #0D47A1 60%, #01579B 90%);
-            background-size: 100% 100%;
-            box-shadow: 
-                0 0 100px rgba(100, 181, 246, 0.3),
-                0 0 60px rgba(0, 217, 163, 0.2),
-                inset -35px -35px 80px rgba(0, 0, 0, 0.7),
-                inset 25px 25px 60px rgba(255, 255, 255, 0.08);
-            animation: earthRotate 60s linear infinite;
-            position: relative;
-            overflow: hidden;
+            box-shadow:
+                0 0 100px rgba(100,181,246,0.3), 0 0 60px rgba(0,217,163,0.2),
+                inset -35px -35px 80px rgba(0,0,0,0.7), inset 25px 25px 60px rgba(255,255,255,0.08);
+            animation: earthRotate 60s linear infinite; position: relative; overflow: hidden;
         }
 
         .earth::before {
-            content: '';
-            position: absolute;
-            top: 10%; left: 10%;
-            width: 50%; height: 50%;
+            content: ''; position: absolute; top: 10%; left: 10%; width: 50%; height: 50%;
             background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 40%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            animation: shimmer 8s ease-in-out infinite;
+            border-radius: 50%; pointer-events: none; animation: shimmer 8s ease-in-out infinite;
         }
 
         .earth::after {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, rgba(135, 206, 250, 0.3) 0%, rgba(100, 181, 246, 0.2) 30%, transparent 70%);
+            content: ''; position: absolute; inset: -2px; border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(135,206,250,0.3) 0%, rgba(100,181,246,0.2) 30%, transparent 70%);
             pointer-events: none;
         }
 
         @keyframes earthRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes shimmer {
-            0%, 100% { transform: translate(0, 0); opacity: 1; }
-            50% { transform: translate(-5px, -5px); opacity: 0.8; }
+            0%, 100% { transform: translate(0,0); opacity: 1; }
+            50% { transform: translate(-5px,-5px); opacity: 0.8; }
         }
 
         .earth-glow {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 150%; height: 150%;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(100, 181, 246, 0.25) 0%, rgba(0, 217, 163, 0.15) 40%, rgba(167, 139, 250, 0.1) 60%, transparent 75%);
-            animation: pulse 5s ease-in-out infinite;
-            filter: blur(35px);
-            z-index: -1;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+            width: 150%; height: 150%; border-radius: 50%;
+            background: radial-gradient(circle, rgba(100,181,246,0.25) 0%, rgba(0,217,163,0.15) 40%, rgba(167,139,250,0.1) 60%, transparent 75%);
+            animation: pulse 5s ease-in-out infinite; filter: blur(35px); z-index: -1;
         }
 
         @keyframes pulse {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
-            50% { transform: translate(-50%, -50%) scale(1.12); opacity: 0.25; }
+            0%, 100% { transform: translate(-50%,-50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%,-50%) scale(1.12); opacity: 0.25; }
         }
 
         .clouds {
-            position: absolute;
-            width: 100%; height: 100%;
-            border-radius: 50%;
-            background: 
+            position: absolute; width: 100%; height: 100%; border-radius: 50%;
+            background:
                 radial-gradient(ellipse at 35% 25%, rgba(255,255,255,0.6) 0%, transparent 4%),
                 radial-gradient(ellipse at 55% 50%, rgba(255,255,255,0.5) 0%, transparent 5%),
                 radial-gradient(ellipse at 75% 35%, rgba(255,255,255,0.55) 0%, transparent 3.5%),
                 radial-gradient(ellipse at 25% 60%, rgba(255,255,255,0.5) 0%, transparent 4.5%),
                 radial-gradient(ellipse at 60% 75%, rgba(255,255,255,0.6) 0%, transparent 4%);
-            animation: driftClouds 50s linear infinite;
-            pointer-events: none;
+            animation: driftClouds 50s linear infinite; pointer-events: none;
         }
 
         @keyframes driftClouds { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
         .cta-buttons {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            flex-wrap: wrap;
+            display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;
             animation: fadeInUp 1s ease-out 0.6s backwards;
         }
 
         .btn {
-            padding: 1.2rem 3rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.03);
-            color: var(--text-light);
-            backdrop-filter: blur(10px);
+            padding: 1.2rem 3rem; font-size: 1.1rem; font-weight: 600;
+            border: 2px solid rgba(255,255,255,0.2); border-radius: 16px; cursor: pointer;
+            transition: all 0.3s ease; text-decoration: none; display: inline-block;
+            background: rgba(255,255,255,0.03); color: var(--text-light); backdrop-filter: blur(10px);
         }
 
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
+        .btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.3); transform: translateY(-2px); }
 
         .btn.active {
-            background: linear-gradient(135deg, #00d9a3, #00b894);
-            color: #0d1117;
-            border-color: transparent;
-            box-shadow: 0 10px 40px rgba(0, 217, 163, 0.3);
-            font-weight: 700;
+            background: linear-gradient(135deg, #00d9a3, #00b894); color: #0d1117;
+            border-color: transparent; box-shadow: 0 10px 40px rgba(0,217,163,0.3); font-weight: 700;
         }
 
-        .btn.active:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 50px rgba(0, 217, 163, 0.5);
-        }
+        .btn.active:hover { transform: translateY(-3px); box-shadow: 0 15px 50px rgba(0,217,163,0.5); }
 
+        /* STATS */
         .stats {
             padding: 10rem 3rem;
-            display: grid;
-            grid-template-columns: repeat(3, minmax(280px, 1fr));
-            gap: 4rem;
-            max-width: 1400px;
-            margin: 0 auto;
+            display: grid; grid-template-columns: repeat(3, minmax(280px, 1fr));
+            gap: 4rem; max-width: 1400px; margin: 0 auto;
         }
 
         .stat-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 28px;
-            padding: 3.5rem 3rem;
-            text-align: center;
-            transition: all 0.3s ease;
+            background: var(--card-bg); backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.06); border-radius: 28px;
+            padding: 3.5rem 3rem; text-align: center; transition: all 0.3s ease;
         }
 
-        .stat-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--primary-green);
-            box-shadow: 0 20px 50px rgba(0, 217, 163, 0.2);
-        }
+        .stat-card:hover { transform: translateY(-10px); border-color: var(--primary-green); box-shadow: 0 20px 50px rgba(0,217,163,0.2); }
 
         .stat-number {
-            font-size: 3.5rem;
-            font-weight: 800;
+            font-size: 3.5rem; font-weight: 800;
             background: linear-gradient(135deg, #00d9a3, #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
 
-        .stat-label {
-            color: var(--text-dim);
-            font-size: 1.1rem;
-            margin-top: 1rem;
-            line-height: 1.6;
-        }
+        .stat-label { color: var(--text-dim); font-size: 1.1rem; margin-top: 1rem; line-height: 1.6; }
 
+        /* FEATURES */
         .features { padding: 10rem 3rem; max-width: 1400px; margin: 0 auto; }
 
         .section-header { text-align: center; margin-bottom: 6rem; }
 
         .section-header h2 {
-            font-size: clamp(2rem, 4vw, 3.5rem);
-            margin-bottom: 2rem;
+            font-size: clamp(2rem, 4vw, 3.5rem); margin-bottom: 2rem;
             background: linear-gradient(135deg, #00d9a3, #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 800;
-            letter-spacing: -0.02em;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            font-weight: 800; letter-spacing: -0.02em;
         }
 
-        .section-header p {
-            color: var(--text-dim);
-            font-size: 1.15rem;
-            max-width: 650px;
-            margin: 0 auto;
-            line-height: 1.8;
-        }
+        .section-header p { color: var(--text-dim); font-size: 1.15rem; max-width: 650px; margin: 0 auto; line-height: 1.8; }
 
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-            gap: 3.5rem;
-        }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 3.5rem; }
 
         .feature-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 32px;
-            padding: 4rem 3.5rem;
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
+            background: var(--card-bg); backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.06); border-radius: 32px;
+            padding: 4rem 3.5rem; transition: all 0.4s ease;
+            position: relative; overflow: hidden;
         }
 
         .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 4px;
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
             background: linear-gradient(90deg, #00d9a3, #a78bfa, #ff6b9d);
-            transform: scaleX(0);
-            transition: transform 0.4s ease;
+            transform: scaleX(0); transition: transform 0.4s ease;
         }
 
         .feature-card:hover::before { transform: scaleX(1); }
 
-        .feature-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--primary-green);
-            box-shadow: 0 25px 60px rgba(0, 217, 163, 0.2);
-        }
+        .feature-card:hover { transform: translateY(-10px); border-color: var(--primary-green); box-shadow: 0 25px 60px rgba(0,217,163,0.2); }
 
         .feature-icon {
             width: 80px; height: 80px;
             background: linear-gradient(135deg, #00d9a3, #00b894);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 40px rgba(0, 217, 163, 0.3);
+            border-radius: 20px; display: flex; align-items: center; justify-content: center;
+            font-size: 2.2rem; margin-bottom: 2rem; box-shadow: 0 10px 40px rgba(0,217,163,0.3);
         }
 
         .feature-card h3 { font-size: 1.6rem; margin-bottom: 1.2rem; color: var(--text-light); }
         .feature-card p { color: var(--text-dim); line-height: 1.8; font-size: 1.05rem; }
 
+        /* Clickable feature card */
+        .feature-card.clickable { cursor: pointer; }
+        .feature-card.clickable .card-link-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            margin-top: 1.5rem; font-size: 0.85rem; font-weight: 600;
+            color: var(--primary-green); opacity: 0; transform: translateX(-8px);
+            transition: all 0.3s ease;
+        }
+        .feature-card.clickable:hover .card-link-badge { opacity: 1; transform: translateX(0); }
+
+        /* Special EcoMentor card highlight */
+        .feature-card.ecomentor-card {
+            border-color: rgba(0, 217, 163, 0.25);
+            background: linear-gradient(135deg, rgba(0,217,163,0.06), rgba(0,184,240,0.04));
+            position: relative;
+        }
+        .feature-card.ecomentor-card::after {
+            content: 'OPEN →';
+            position: absolute; top: 1.2rem; right: 1.5rem;
+            font-size: 0.65rem; font-weight: 700; letter-spacing: 2px;
+            color: var(--primary-green);
+            background: rgba(0,217,163,0.1); border: 1px solid rgba(0,217,163,0.25);
+            padding: 0.3rem 0.7rem; border-radius: 20px;
+            font-family: 'Space Mono', monospace;
+            transition: all 0.3s ease;
+        }
+        .feature-card.ecomentor-card:hover::after {
+            background: rgba(0,217,163,0.2);
+            border-color: rgba(0,217,163,0.5);
+            transform: translateX(3px);
+        }
+        .feature-card.ecomentor-card:hover {
+            border-color: var(--primary-green);
+            box-shadow: 0 25px 60px rgba(0, 217, 163, 0.35), 0 0 0 1px rgba(0,217,163,0.15);
+            transform: translateY(-12px);
+        }
+        .feature-card.ecomentor-card .feature-icon {
+            background: linear-gradient(135deg, #00d9a3, #00b8f0);
+            box-shadow: 0 10px 40px rgba(0,217,163,0.5);
+            animation: iconPulse 3s ease-in-out infinite;
+        }
+        @keyframes iconPulse {
+            0%,100% { box-shadow: 0 10px 40px rgba(0,217,163,0.4); }
+            50% { box-shadow: 0 10px 60px rgba(0,217,163,0.7), 0 0 30px rgba(0,184,240,0.3); }
+        }
+
+        /* FUTURE TOGGLE */
         .future-toggle { padding: 10rem 3rem; text-align: center; max-width: 1100px; margin: 0 auto; }
 
         .toggle-container {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 32px;
-            padding: 5rem 4rem;
-            margin-top: 4rem;
+            background: var(--card-bg); backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.06); border-radius: 32px;
+            padding: 5rem 4rem; margin-top: 4rem;
         }
 
-        .toggle-switch {
-            display: flex;
-            gap: 2.5rem;
-            justify-content: center;
-            align-items: center;
-            margin-top: 2.5rem;
-        }
+        .toggle-switch { display: flex; gap: 2.5rem; justify-content: center; align-items: center; margin-top: 2.5rem; }
 
         .toggle-option {
-            padding: 1.5rem 2.5rem;
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-            min-width: 180px;
+            padding: 1.5rem 2.5rem; border-radius: 16px; cursor: pointer;
+            transition: all 0.3s ease; border: 2px solid transparent; min-width: 180px;
         }
 
         .toggle-option.active {
             background: linear-gradient(135deg, #00d9a3, #00b894);
-            box-shadow: 0 10px 40px rgba(0, 217, 163, 0.3);
-            color: #0d1117;
-            font-weight: 700;
+            box-shadow: 0 10px 40px rgba(0,217,163,0.3); color: #0d1117; font-weight: 700;
         }
 
-        .toggle-option:not(.active) {
-            background: rgba(255, 255, 255, 0.03);
-            border-color: rgba(255, 255, 255, 0.1);
-        }
+        .toggle-option:not(.active) { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.1); }
+        .toggle-option:not(.active):hover { background: rgba(255,255,255,0.05); border-color: rgba(167,139,250,0.3); }
 
-        .toggle-option:not(.active):hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(167, 139, 250, 0.3);
-        }
-
+        /* CTA */
         .cta-section {
-            padding: 10rem 3rem;
-            text-align: center;
-            background: radial-gradient(circle at center, rgba(0, 217, 163, 0.05), transparent);
+            padding: 10rem 3rem; text-align: center;
+            background: radial-gradient(circle at center, rgba(0,217,163,0.05), transparent);
         }
 
         .cta-section h2 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 2.5rem; }
@@ -442,6 +342,40 @@
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* AI ASSISTANT FAB */
+        .ai-assistant {
+            position: fixed; bottom: 2rem; right: 2rem;
+            width: 70px; height: 70px;
+            background: linear-gradient(135deg, #00d9a3, #00b894);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 10px 50px rgba(0,217,163,0.5);
+            transition: all 0.3s ease; z-index: 1000; font-size: 2rem;
+            text-decoration: none;
+        }
+
+        .ai-assistant:hover { transform: scale(1.1); box-shadow: 0 15px 60px rgba(0,217,163,0.7); }
+
+        .ai-pulse {
+            position: absolute; width: 100%; height: 100%; border-radius: 50%;
+            background: var(--primary-green); animation: pulse-ring 2s ease-out infinite;
+        }
+
+        .ai-tooltip {
+            position: absolute; right: 85px; bottom: 50%; transform: translateY(50%);
+            background: rgba(13,17,23,0.95); border: 1px solid rgba(0,217,163,0.3);
+            color: var(--primary-green); font-size: 0.75rem; font-weight: 600;
+            padding: 0.4rem 0.9rem; border-radius: 8px; white-space: nowrap;
+            opacity: 0; pointer-events: none; transition: opacity 0.2s;
+            font-family: 'Space Mono', monospace; letter-spacing: 0.5px;
+        }
+
+        .ai-assistant:hover .ai-tooltip { opacity: 1; }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1.5); opacity: 0; }
         }
 
         @media (max-width: 768px) {
@@ -455,43 +389,11 @@
             .toggle-switch { flex-direction: column; gap: 1.5rem; }
             .toggle-container { padding: 3.5rem 2.5rem; }
         }
-
-        .ai-assistant {
-            position: fixed;
-            bottom: 2rem; right: 2rem;
-            width: 70px; height: 70px;
-            background: linear-gradient(135deg, #00d9a3, #00b894);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 10px 50px rgba(0, 217, 163, 0.5);
-            transition: all 0.3s ease;
-            z-index: 1000;
-            font-size: 2rem;
-        }
-
-        .ai-assistant:hover {
-            transform: scale(1.1);
-            box-shadow: 0 15px 60px rgba(0, 217, 163, 0.7);
-        }
-
-        .ai-pulse {
-            position: absolute;
-            width: 100%; height: 100%;
-            border-radius: 50%;
-            background: var(--primary-green);
-            animation: pulse-ring 2s ease-out infinite;
-        }
-
-        @keyframes pulse-ring {
-            0% { transform: scale(1); opacity: 0.5; }
-            100% { transform: scale(1.5); opacity: 0; }
-        }
     </style>
 </head>
 <body>
+
+    <!-- NAVBAR -->
     <nav class="navbar">
         <div class="nav-content">
             <div class="logo">
@@ -503,21 +405,24 @@
             <div class="nav-links">
                 <a href="#features">Features</a>
                 <a href="#impact">Impact</a>
-                <a href="#about">About</a>
-                <button class="btn active" style="padding: 0.7rem 1.8rem; font-size: 0.95rem;">Get Started</button>
+                <a href="imagedetect.html">Image Detect</a>
+                <a href="garbage.html">Garbage Detect</a>
+                <a href="aieco.html">EcoMentor AI</a>
+                <a href="aieco.html" class="nav-btn">🌿 Chat with AI</a>
             </div>
         </div>
     </nav>
 
+    <!-- HERO -->
     <section class="hero">
         <div class="hero-bg">
             <div class="particles" id="particles"></div>
         </div>
-        
+
         <div class="hero-content">
             <h1>Citizen-Powered Environmental Monitoring</h1>
             <p>Upload a photo. AI detects the problem. Together we create change. Transform your smartphone into a powerful environmental monitoring tool.</p>
-            
+
             <div class="earth-container">
                 <div class="earth-glow"></div>
                 <div class="earth">
@@ -526,14 +431,14 @@
             </div>
 
             <div class="cta-buttons">
-                <button class="btn" id="earth-btn" onclick="scrollToFeature('ai-detection', 'earth-btn')">Upload & Detect</button>
-                <button class="btn" id="mentor-btn" onclick="scrollToFeature('ai-mentor', 'mentor-btn')">AI + You</button>
+                <a href="imagedetect.html" class="btn" id="earth-btn">📸 Upload & Detect</a>
+                <a href="aieco.html" class="btn active" id="mentor-btn">🌿 AI + You</a>
             </div>
         </div>
     </section>
 
-    <!-- Stats Section — AI+You card removed, now only 3 cards -->
-    <section class="stats">
+    <!-- STATS -->
+    <section class="stats" id="impact">
         <div class="stat-card">
             <div class="stat-number">8M+</div>
             <div class="stat-label">Tons of Plastic in Oceans Yearly</div>
@@ -548,6 +453,7 @@
         </div>
     </section>
 
+    <!-- FEATURES -->
     <section class="features" id="features">
         <div class="section-header">
             <h2>AI-Powered Environmental Detection</h2>
@@ -555,22 +461,26 @@
         </div>
 
         <div class="features-grid">
-            <div class="feature-card" id="ai-detection">
+
+            <div class="feature-card clickable" id="ai-detection" onclick="window.location.href='imagedetect.html'">
                 <div class="feature-icon">📸</div>
                 <h3>Smart Image Detection</h3>
                 <p>Upload any environmental photo. Our AI instantly detects garbage, pollution, road cracks, deforestation, and more. Get real-time detection overlays with highlighted problem areas.</p>
+                <div class="card-link-badge">Open Detector →</div>
             </div>
 
-            <div class="feature-card" id="ai-mentor">
+            <div class="feature-card clickable ecomentor-card" id="ai-mentor" onclick="window.location.href='aieco.html'" style="cursor:pointer;">
                 <div class="feature-icon">🧠</div>
                 <h3>AI Eco Mentor</h3>
                 <p>Your personal AI sustainability advisor. Get instant answers about environmental issues, waste disposal, local pollution data, and personalized eco-action plans. Chat 24/7 with your intelligent guide.</p>
+                <div class="card-link-badge">Launch EcoMentor AI →</div>
             </div>
 
-            <div class="feature-card" onclick="window.location.href='garbage.html'" style="cursor:pointer;">
+            <div class="feature-card clickable" onclick="window.location.href='garbage.html'">
                 <div class="feature-icon">🚮</div>
                 <h3>Garbage Detection</h3>
                 <p>Detect litter in parks, streets, and rivers. AI identifies trash piles, categorizes waste types, and generates cleanup priority zones. Turn every citizen into an eco-warrior.</p>
+                <div class="card-link-badge">Try It →</div>
             </div>
 
             <div class="feature-card">
@@ -608,15 +518,16 @@
                 <h3>Eco-Warrior Leaderboard</h3>
                 <p>Earn points for every issue reported. Compete with neighbors, unlock badges, and climb the leaderboard. Gamified environmental action that drives real change.</p>
             </div>
+
         </div>
     </section>
 
+    <!-- FUTURE TOGGLE -->
     <section class="future-toggle">
         <div class="section-header">
             <h2>What If Everyone Was You?</h2>
             <p>See the collective impact if 1 million people adopted your lifestyle</p>
         </div>
-
         <div class="toggle-container">
             <h3 style="margin-bottom: 2rem;">Choose Your Future</h3>
             <div class="toggle-switch">
@@ -633,75 +544,73 @@
         </div>
     </section>
 
+    <!-- CTA -->
     <section class="cta-section">
         <h2>Ready to Create Your Impact?</h2>
         <p style="color: var(--text-dim); margin-bottom: 2rem; font-size: 1.2rem;">Join thousands making sustainability measurable</p>
-        <button class="btn active" style="font-size: 1.2rem; padding: 1.2rem 3rem;">Start Your Journey</button>
+        <a href="aieco.html" class="btn active" style="font-size: 1.2rem; padding: 1.2rem 3rem;">Start Your Journey</a>
     </section>
 
-    <div class="ai-assistant" onclick="scrollToFeature('ai-mentor', 'mentor-btn')">
+    <!-- AI FAB — links directly to EcoMentor -->
+    <a class="ai-assistant" href="aieco.html">
         <div class="ai-pulse"></div>
+        <span class="ai-tooltip">EcoMentor AI</span>
         <span>🤖</span>
-    </div>
+    </a>
 
     <script>
-        // Create floating particles
+        // Particles
         const particlesContainer = document.getElementById('particles');
         for (let i = 0; i < 15; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.top = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 20 + 's';
-            particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
-            particlesContainer.appendChild(particle);
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.top = Math.random() * 100 + '%';
+            p.style.animationDelay = Math.random() * 20 + 's';
+            p.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            particlesContainer.appendChild(p);
         }
 
-        function scrollToFeature(featureId, buttonId) {
-            const element = document.getElementById(featureId);
-            const button = document.getElementById(buttonId);
-            
-            document.querySelectorAll('.cta-buttons .btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            if (button) button.classList.add('active');
-            
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                element.style.transform = 'scale(1.05)';
-                element.style.boxShadow = '0 30px 80px rgba(0, 217, 163, 0.4), 0 0 0 3px rgba(0, 217, 163, 0.3)';
-                element.style.border = '1px solid rgba(0, 217, 163, 0.5)';
-                setTimeout(() => {
-                    element.style.transform = '';
-                    element.style.boxShadow = '';
-                    element.style.border = '';
-                }, 3000);
-            }
-        }
-
+        // Future toggle
         const toggleOptions = document.querySelectorAll('.toggle-option');
         toggleOptions.forEach(option => {
             option.addEventListener('click', () => {
-                toggleOptions.forEach(opt => opt.classList.remove('active'));
+                toggleOptions.forEach(o => o.classList.remove('active'));
                 option.classList.add('active');
-                if (option.textContent.includes('Climate Crisis')) {
-                    document.body.style.background = 'linear-gradient(135deg, #1a0f0f 0%, #2a1a1a 50%, #1f0f0f 100%)';
-                } else {
-                    document.body.style.background = 'linear-gradient(135deg, #0d1117 0%, #1a1f2e 50%, #0f1419 100%)';
-                }
+                document.body.style.background = option.textContent.includes('Climate Crisis')
+                    ? 'linear-gradient(135deg, #1a0f0f 0%, #2a1a1a 50%, #1f0f0f 100%)'
+                    : 'linear-gradient(135deg, #0d1117 0%, #1a1f2e 50%, #0f1419 100%)';
             });
         });
 
+        // Scroll animation
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.animation = 'fadeInUp 0.8s ease-out forwards';
-                }
+                if (entry.isIntersecting) entry.target.style.animation = 'fadeInUp 0.8s ease-out forwards';
             });
         }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
         document.querySelectorAll('.stat-card, .feature-card').forEach(el => observer.observe(el));
+
+        // Highlight + navigate for image detection card (scroll into view first, then navigate)
+        function scrollToDetect() {
+            const el = document.getElementById('ai-detection');
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el.style.boxShadow = '0 30px 80px rgba(0, 217, 163, 0.4), 0 0 0 3px rgba(0, 217, 163, 0.3)';
+                el.style.border = '1px solid rgba(0, 217, 163, 0.5)';
+                setTimeout(() => {
+                    el.style.boxShadow = '';
+                    el.style.border = '';
+                    window.location.href = 'imagedetect.html';
+                }, 600);
+            }
+        }
+
+        // Make "Upload & Detect" button do a smooth-scroll-then-navigate effect
+        document.getElementById('earth-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            scrollToDetect();
+        });
     </script>
 </body>
 </html>
