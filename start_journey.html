@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SustainX — Start Your Journey</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --green:   #00d9a3;
+            --purple:  #a78bfa;
+            --coral:   #ff6b9d;
+            --dark:    #0a0e17;
+            --card:    rgba(255,255,255,0.03);
+            --dim:     #6e87a2;
+            --light:   #f0f6fc;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: 'DM Sans', sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            overflow: hidden;
+        }
+
+        /* ── Full-page split layout ── */
+        .page {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* ══════════════════════
+           LEFT PANEL  – visuals
+        ══════════════════════ */
+        .left-panel {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(160deg, #060d14 0%, #0d1e2e 60%, #091a14 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 3.5rem;
+        }
+
+        /* Animated mesh background */
+        .mesh {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 20% 30%, rgba(0,217,163,0.12) 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 70%, rgba(167,139,250,0.10) 0%, transparent 55%),
+                radial-gradient(ellipse at 50% 50%, rgba(255,107,157,0.05) 0%, transparent 60%);
+            animation: meshPulse 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes meshPulse {
+            from { opacity: 0.6; transform: scale(1); }
+            to   { opacity: 1;   transform: scale(1.04); }
+        }
+
+        /* Floating dots grid */
+        .dots-grid {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, rgba(0,217,163,0.15) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.3;
+        }
+
+        /* Orbiting ring around globe */
+        .globe-wrap {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            z-index: 2;
+            margin-bottom: 3rem;
+        }
+
+        .orbit-ring {
+            position: absolute;
+            inset: -24px;
+            border-radius: 50%;
+            border: 1.5px dashed rgba(0,217,163,0.25);
+            animation: orbit 18s linear infinite;
+        }
+
+        .orbit-ring::after {
+            content: '🌱';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.4rem;
+        }
+
+        @keyframes orbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .globe {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 45% 35%, #8B7355 0%, transparent 8%),
+                radial-gradient(circle at 50% 40%, #7CB342 0%, transparent 12%),
+                radial-gradient(circle at 35% 55%, #5D8B3A 0%, transparent 15%),
+                radial-gradient(circle at 60% 25%, #A0826D 0%, transparent 10%),
+                radial-gradient(circle at 25% 45%, #689F38 0%, transparent 14%),
+                radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.8) 0%, transparent 6%),
+                radial-gradient(ellipse at 65% 45%, rgba(255,255,255,0.7) 0%, transparent 8%),
+                radial-gradient(ellipse at 50% 50%, #1565C0 20%, #0D47A1 60%, #01579B 90%);
+            box-shadow:
+                0 0 80px rgba(0,217,163,0.3),
+                inset -30px -30px 60px rgba(0,0,0,0.6),
+                inset 20px 20px 50px rgba(255,255,255,0.06);
+            animation: spin 40s linear infinite;
+        }
+
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .globe-glow {
+            position: absolute;
+            inset: -30%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,217,163,0.15) 0%, transparent 65%);
+            filter: blur(30px);
+            animation: glowPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%,100% { opacity: 0.5; transform: scale(1); }
+            50%      { opacity: 1;   transform: scale(1.1); }
+        }
+
+        .left-text { position: relative; z-index: 2; text-align: center; }
+
+        .left-text h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.8rem, 2.8vw, 2.6rem);
+            font-weight: 800;
+            line-height: 1.15;
+            background: linear-gradient(135deg, #00d9a3, #a78bfa, #ff6b9d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .left-text p {
+            color: var(--dim);
+            font-size: 1rem;
+            line-height: 1.7;
+            max-width: 340px;
+            margin: 0 auto 2.5rem;
+        }
+
+        /* Impact stats row */
+        .impact-row {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .impact-stat {
+            text-align: center;
+        }
+
+        .impact-stat .num {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d9a3, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .impact-stat .lbl {
+            font-size: 0.72rem;
+            color: var(--dim);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-top: 0.2rem;
+        }
+
+        /* floating badges */
+        .badge-float {
+            position: absolute;
+            background: rgba(0,217,163,0.08);
+            border: 1px solid rgba(0,217,163,0.2);
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            font-size: 0.78rem;
+            color: var(--green);
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            animation: badgeFloat 6s ease-in-out infinite;
+            z-index: 3;
+        }
+
+        .badge-float:nth-child(1) { top: 15%; left: 8%; animation-delay: 0s; }
+        .badge-float:nth-child(2) { top: 25%; right: 6%; animation-delay: 1.5s; }
+        .badge-float:nth-child(3) { bottom: 22%; left: 6%; animation-delay: 3s; }
+        .badge-float:nth-child(4) { bottom: 15%; right: 8%; animation-delay: 4.5s; }
+
+        @keyframes badgeFloat {
+            0%,100% { transform: translateY(0); }
+            50%      { transform: translateY(-10px); }
+        }
+
+        /* ══════════════════════
+           RIGHT PANEL – form
+        ══════════════════════ */
+        .right-panel {
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 4rem;
+            background: linear-gradient(180deg, #0d1117 0%, #080c12 100%);
+            scrollbar-width: none;
+        }
+
+        .right-panel::-webkit-scrollbar { display: none; }
+
+        /* subtle right border glow */
+        .right-panel::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 10%; bottom: 10%;
+            width: 1px;
+            background: linear-gradient(180deg, transparent, rgba(0,217,163,0.3), transparent);
+        }
+
+        .form-wrap {
+            width: 100%;
+            max-width: 420px;
+            animation: slideIn 0.7s cubic-bezier(0.16,1,0.3,1) both;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(30px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Back link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--dim);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            margin-bottom: 2.5rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover { color: var(--green); }
+
+        /* Form header */
+        .form-brand {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #00d9a3, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.6rem;
+        }
+
+        .form-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--light);
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 0.6rem;
+        }
+
+        .form-subtitle {
+            color: var(--dim);
+            font-size: 0.93rem;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+        }
+
+        /* Tabs: Sign In / Sign Up */
+        .tabs {
+            display: flex;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 14px;
+            padding: 4px;
+            margin-bottom: 2rem;
+            gap: 4px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 0.7rem;
+            border-radius: 10px;
+            border: none;
+            background: transparent;
+            color: var(--dim);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #00d9a3, #00b894);
+            color: #0a0e17;
+            box-shadow: 0 4px 16px rgba(0,217,163,0.25);
+        }
+
+        /* Form fields */
+        .form { display: flex; flex-direction: column; gap: 1rem; }
+
+        .field-group { display: flex; flex-direction: column; gap: 0.38rem; }
+
+        .field-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--dim);
+        }
+
+        .field-row {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .field-ico {
+            position: absolute;
+            left: 1rem;
+            font-size: 1rem;
+            pointer-events: none;
+            color: #344a5a;
+            transition: color 0.25s;
+            z-index: 1;
+        }
+
+        .field-row:focus-within .field-ico { color: var(--green); }
+
+        .field-input {
+            width: 100%;
+            background: rgba(255,255,255,0.035);
+            border: 1.5px solid rgba(255,255,255,0.07);
+            border-radius: 13px;
+            padding: 0.82rem 1rem 0.82rem 2.8rem;
+            font-size: 0.95rem;
+            color: var(--light);
+            font-family: 'DM Sans', sans-serif;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .field-input::placeholder { color: #2e4050; }
+
+        .field-input:focus {
+            border-color: rgba(0,217,163,0.45);
+            background: rgba(0,217,163,0.03);
+            box-shadow: 0 0 0 4px rgba(0,217,163,0.07);
+        }
+
+        /* Eye toggle for password */
+        .eye-toggle {
+            position: absolute;
+            right: 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #344a5a;
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+
+        .eye-toggle:hover { color: var(--green); }
+
+        /* Password strength */
+        .strength-track {
+            height: 3px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 0.4rem;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 2px;
+            transition: width 0.4s ease, background 0.4s ease;
+            background: var(--green);
+        }
+
+        .strength-text {
+            font-size: 0.72rem;
+            color: var(--dim);
+            margin-top: 0.3rem;
+            min-height: 1em;
+        }
+
+        /* Eco goals */
+        .eco-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--dim);
+            margin-bottom: 0.5rem;
+        }
+
+        .eco-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+        .chip {
+            padding: 0.38rem 0.8rem;
+            border: 1.5px solid rgba(255,255,255,0.08);
+            border-radius: 50px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            color: #4a6070;
+            background: transparent;
+            transition: all 0.22s ease;
+            user-select: none;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .chip:hover { border-color: rgba(0,217,163,0.35); color: var(--green); }
+        .chip.on {
+            border-color: var(--green);
+            color: var(--green);
+            background: rgba(0,217,163,0.1);
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            margin: 0.2rem 0;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.07);
+        }
+
+        .divider span { font-size: 0.78rem; color: #2e4050; white-space: nowrap; }
+
+        /* Social buttons */
+        .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            border: 1.5px solid rgba(255,255,255,0.08);
+            border-radius: 13px;
+            background: rgba(255,255,255,0.02);
+            color: #8a9daf;
+            font-size: 0.85rem;
+            font-weight: 600;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .social-btn svg { width: 17px; height: 17px; flex-shrink: 0; }
+
+        .social-btn.li:hover { border-color: rgba(0,119,181,0.55); background: rgba(0,119,181,0.08); color: #5bbfff; }
+        .social-btn.ig:hover { border-color: rgba(228,64,95,0.45); background: rgba(228,64,95,0.07); color: #f06292; }
+
+        /* Agree row */
+        .agree-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.7rem;
+            font-size: 0.82rem;
+            color: var(--dim);
+            margin-top: 0.2rem;
+        }
+
+        .agree-row input[type="checkbox"] {
+            margin-top: 2px;
+            accent-color: var(--green);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .agree-row a { color: var(--green); text-decoration: none; }
+
+        /* Submit */
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #00d9a3, #00b894);
+            border: none;
+            border-radius: 14px;
+            color: #0a0e17;
+            font-size: 1rem;
+            font-weight: 800;
+            font-family: 'Syne', sans-serif;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(0,217,163,0.28);
+            margin-top: 0.4rem;
+            letter-spacing: 0.02em;
+        }
+
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 44px rgba(0,217,163,0.45); }
+        .submit-btn:active { transform: translateY(0); }
+
+        .submit-btn .shine {
+            position: absolute;
+            top: 0; left: -100%;
+            width: 60%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+            transform: skewX(-20deg);
+            transition: left 0.6s ease;
+        }
+
+        .submit-btn:hover .shine { left: 160%; }
+
+        /* Footer */
+        .form-foot {
+            text-align: center;
+            margin-top: 1.4rem;
+            font-size: 0.83rem;
+            color: #2e4050;
+        }
+
+        .form-foot a { color: var(--green); text-decoration: none; font-weight: 600; }
+        .form-foot a:hover { opacity: 0.75; }
+
+        /* Privacy badge */
+        .privacy-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+            margin-top: 1.4rem;
+            padding: 0.6rem 1rem;
+            background: rgba(0,217,163,0.04);
+            border: 1px solid rgba(0,217,163,0.1);
+            border-radius: 10px;
+            font-size: 0.76rem;
+            color: #3a6050;
+        }
+
+        .privacy-badge strong { color: var(--green); }
+
+        /* ── Success Screen ── */
+        .success-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 1.2rem;
+            padding: 2rem 0;
+            animation: fadeUp 0.6s ease both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity:0; transform: translateY(20px); }
+            to   { opacity:1; transform: translateY(0); }
+        }
+
+        .success-orb {
+            width: 90px; height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d9a3, #00b894);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.6rem;
+            box-shadow: 0 12px 50px rgba(0,217,163,0.45);
+            animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0); opacity:0; }
+            to   { transform: scale(1); opacity:1; }
+        }
+
+        .success-screen h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--light);
+        }
+
+        .success-screen p { color: var(--dim); font-size: 0.95rem; line-height: 1.6; }
+
+        .go-btn {
+            padding: 0.9rem 2.5rem;
+            background: linear-gradient(135deg, #00d9a3, #00b894);
+            border: none; border-radius: 14px;
+            color: #0a0e17;
+            font-size: 1rem; font-weight: 800;
+            font-family: 'Syne', sans-serif;
+            cursor: pointer;
+            box-shadow: 0 8px 30px rgba(0,217,163,0.3);
+            transition: all 0.3s;
+        }
+
+        .go-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(0,217,163,0.45); }
+
+        /* ── Toast ── */
+        .toast {
+            position: fixed;
+            bottom: 2rem; left: 50%;
+            transform: translateX(-50%) translateY(70px);
+            background: linear-gradient(135deg, #00d9a3, #00b894);
+            color: #0a0e17;
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 0.85rem 1.8rem;
+            border-radius: 50px;
+            z-index: 9999;
+            opacity: 0;
+            white-space: nowrap;
+            transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s ease;
+            box-shadow: 0 10px 36px rgba(0,217,163,0.35);
+        }
+
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        /* ── Responsive ── */
+        @media (max-width: 860px) {
+            .page { grid-template-columns: 1fr; grid-template-rows: auto 1fr; overflow-y: auto; }
+            html, body { overflow: auto; height: auto; }
+            .left-panel { padding: 3rem 2rem 2.5rem; min-height: auto; }
+            .globe-wrap { width: 180px; height: 180px; margin-bottom: 2rem; }
+            .right-panel { overflow: visible; padding: 2.5rem 1.8rem 4rem; }
+            .form-wrap { max-width: 100%; }
+            .badge-float { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page">
+
+    <!-- ══════════ LEFT PANEL ══════════ -->
+    <div class="left-panel">
+        <div class="mesh"></div>
+        <div class="dots-grid"></div>
+
+        <!-- Floating badges -->
+        <div class="badge-float">🌊 Ocean Saved</div>
+        <div class="badge-float">🌳 Trees Planted</div>
+        <div class="badge-float">♻️ Waste Reduced</div>
+        <div class="badge-float">🏆 Eco Warrior</div>
+
+        <!-- Globe -->
+        <div class="globe-wrap">
+            <div class="globe-glow"></div>
+            <div class="orbit-ring"></div>
+            <div class="globe"></div>
+        </div>
+
+        <!-- Text -->
+        <div class="left-text">
+            <h1>Every Upload<br>Changes the World</h1>
+            <p>You're one photo away from making a real environmental impact. Join the citizen monitoring revolution.</p>
+
+            <div class="impact-row">
+                <div class="impact-stat">
+                    <div class="num">42K+</div>
+                    <div class="lbl">Eco Warriors</div>
+                </div>
+                <div class="impact-stat">
+                    <div class="num">1.2M</div>
+                    <div class="lbl">Issues Reported</div>
+                </div>
+                <div class="impact-stat">
+                    <div class="num">89%</div>
+                    <div class="lbl">Resolved</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════ RIGHT PANEL ══════════ -->
+    <div class="right-panel">
+        <div class="form-wrap">
+
+            <!-- Back to home -->
+            <a href="index.html" class="back-link">
+                ← Back to SustainX
+            </a>
+
+            <!-- Header -->
+            <div class="form-brand">🌿 SustainX</div>
+            <h1 class="form-title">Start Your<br>Journey</h1>
+            <p class="form-subtitle">Create your account and begin protecting the planet today.</p>
+
+            <!-- Sign In / Sign Up tabs -->
+            <div class="tabs">
+                <button class="tab active" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+                <button class="tab" id="tabSignin" onclick="switchTab('signin')">Sign In</button>
+            </div>
+
+            <!-- MAIN FORM CONTENT -->
+            <div id="formContent">
+                <form class="form" onsubmit="handleSubmit(event)" novalidate id="mainForm">
+
+                    <!-- Full Name (signup only) -->
+                    <div class="field-group" id="nameField">
+                        <label class="field-label">Full Name</label>
+                        <div class="field-row">
+                            <span class="field-ico">🙂</span>
+                            <input type="text" class="field-input" id="fullName" placeholder="Alex Johnson" />
+                        </div>
+                    </div>
+
+                    <!-- Username -->
+                    <div class="field-group">
+                        <label class="field-label">Username</label>
+                        <div class="field-row">
+                            <span class="field-ico">👤</span>
+                            <input type="text" class="field-input" id="username" placeholder="eco_warrior_42" required />
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="field-group">
+                        <label class="field-label">Password</label>
+                        <div class="field-row">
+                            <span class="field-ico">🔑</span>
+                            <input type="password" class="field-input" id="password" placeholder="••••••••" required oninput="checkStrength(this.value)" />
+                            <button type="button" class="eye-toggle" onclick="toggleEye()" id="eyeBtn">👁</button>
+                        </div>
+                        <div id="strengthTrack" class="strength-track" style="display:none">
+                            <div class="strength-fill" id="strengthFill"></div>
+                        </div>
+                        <div class="strength-text" id="strengthText"></div>
+                    </div>
+
+                    <!-- City (signup only) -->
+                    <div class="field-group" id="cityField">
+                        <label class="field-label">City / Region</label>
+                        <div class="field-row">
+                            <span class="field-ico">📍</span>
+                            <input type="text" class="field-input" id="city" placeholder="e.g. Mumbai, IN" />
+                        </div>
+                    </div>
+
+                    <!-- Eco Goals (signup only) -->
+                    <div id="ecoSection">
+                        <div class="eco-label">🌱 Your Eco Goals</div>
+                        <div class="eco-chips">
+                            <div class="chip" onclick="this.classList.toggle('on')">♻️ Reduce Waste</div>
+                            <div class="chip" onclick="this.classList.toggle('on')">💧 Save Water</div>
+                            <div class="chip" onclick="this.classList.toggle('on')">🌳 Plant Trees</div>
+                            <div class="chip" onclick="this.classList.toggle('on')">🚲 Zero Carbon</div>
+                            <div class="chip" onclick="this.classList.toggle('on')">🐋 Save Oceans</div>
+                            <div class="chip" onclick="this.classList.toggle('on')">☀️ Clean Energy</div>
+                        </div>
+                    </div>
+
+                    <!-- Social login -->
+                    <div class="divider"><span>or continue with</span></div>
+
+                    <div class="social-grid">
+                        <!-- LinkedIn -->
+                        <button type="button" class="social-btn li" onclick="socialLogin('LinkedIn')">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                            LinkedIn
+                        </button>
+
+                        <!-- Instagram -->
+                        <button type="button" class="social-btn ig" onclick="socialLogin('Instagram')">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+                            </svg>
+                            Instagram
+                        </button>
+                    </div>
+
+                    <!-- Agree checkbox (signup only) -->
+                    <div class="agree-row" id="agreeRow">
+                        <input type="checkbox" id="agree" />
+                        <label for="agree">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+                    </div>
+
+                    <!-- Submit -->
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <div class="shine"></div>
+                        <span id="submitLabel">🚀 Create My Account</span>
+                    </button>
+
+                </form>
+
+                <div class="form-foot" id="formFoot">
+                    Already have an account? <a href="#" onclick="switchTab('signin');return false;">Sign in here</a>
+                </div>
+
+                <div class="privacy-badge">
+                    🔒 <span>Privacy-first — <strong>No ads. No data selling.</strong> Planet love only.</span>
+                </div>
+            </div>
+
+            <!-- SUCCESS SCREEN -->
+            <div class="success-screen" id="successScreen">
+                <div class="success-orb">🌿</div>
+                <h2>Welcome, Eco Warrior!</h2>
+                <p>Your journey to protect the planet starts now.<br>Every upload you make creates real change.</p>
+                <div class="privacy-badge" style="width:100%">
+                    🏆 You've earned the <strong>First Step</strong> badge!
+                </div>
+                <button class="go-btn" onclick="window.location.href='index.html'">Back to SustainX 🌍</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+    let currentTab = 'signup';
+
+    function switchTab(tab) {
+        currentTab = tab;
+        document.getElementById('tabSignup').classList.toggle('active', tab === 'signup');
+        document.getElementById('tabSignin').classList.toggle('active', tab === 'signin');
+
+        const signupOnly = ['nameField', 'cityField', 'ecoSection', 'agreeRow'];
+        signupOnly.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.style.display = tab === 'signup' ? '' : 'none';
+        });
+
+        document.getElementById('submitLabel').textContent = tab === 'signup' ? '🚀 Create My Account' : '🔓 Sign In';
+        document.getElementById('formFoot').innerHTML = tab === 'signup'
+            ? 'Already have an account? <a href="#" onclick="switchTab(\'signin\');return false;">Sign in here</a>'
+            : 'New here? <a href="#" onclick="switchTab(\'signup\');return false;">Create an account</a>';
+
+        // Reset strength on tab switch
+        document.getElementById('password').value = '';
+        document.getElementById('strengthFill').style.width = '0%';
+        document.getElementById('strengthText').textContent = '';
+        document.getElementById('strengthTrack').style.display = 'none';
+    }
+
+    function checkStrength(val) {
+        const track = document.getElementById('strengthTrack');
+        const fill  = document.getElementById('strengthFill');
+        const text  = document.getElementById('strengthText');
+
+        track.style.display = val.length ? 'block' : 'none';
+        if (!val.length) { text.textContent = ''; return; }
+
+        let score = 0;
+        if (val.length >= 8)           score++;
+        if (/[A-Z]/.test(val))         score++;
+        if (/[0-9]/.test(val))         score++;
+        if (/[^A-Za-z0-9]/.test(val))  score++;
+
+        const map = [
+            { w: '20%', c: '#ff6b6b', t: 'Too weak' },
+            { w: '40%', c: '#ff9f43', t: 'Weak' },
+            { w: '65%', c: '#ffd93d', t: 'Fair' },
+            { w: '85%', c: '#7bed9f', t: 'Strong' },
+            { w: '100%', c: '#00d9a3', t: 'Very strong ✓' },
+        ];
+
+        fill.style.width      = map[score].w;
+        fill.style.background = map[score].c;
+        text.textContent      = map[score].t;
+        text.style.color      = map[score].c;
+    }
+
+    function toggleEye() {
+        const inp = document.getElementById('password');
+        const btn = document.getElementById('eyeBtn');
+        if (inp.type === 'password') { inp.type = 'text';     btn.textContent = '🙈'; }
+        else                         { inp.type = 'password'; btn.textContent = '👁'; }
+    }
+
+    function socialLogin(provider) {
+        showToast('Connecting to ' + provider + '… 🌿');
+    }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+
+        if (!username) { showToast('⚠️ Please enter a username'); return; }
+        if (password.length < 6) { showToast('⚠️ Password must be at least 6 characters'); return; }
+
+        if (currentTab === 'signup') {
+            const agree = document.getElementById('agree');
+            if (!agree.checked) { showToast('⚠️ Please agree to the terms'); return; }
+        }
+
+        const btn   = document.getElementById('submitBtn');
+        const label = document.getElementById('submitLabel');
+        label.textContent = '⏳ Please wait…';
+        btn.disabled = true;
+
+        setTimeout(() => {
+            document.getElementById('formContent').style.display = 'none';
+            const sc = document.getElementById('successScreen');
+            sc.style.display = 'flex';
+            showToast('🌍 Welcome aboard, ' + username + '!');
+        }, 1500);
+    }
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+    }
+</script>
+</body>
+</html>
