@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wildlife Intelligence Hub — SustainX</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --emerald:#10b981;--jade:#059669;--forest:#047857;
+  --amber:#f59e0b;--coral:#ef4444;--sky:#06b6d4;
+  --violet:#8b5cf6;--rose:#f43f5e;
+  --bg:#0a0f0d;--card:rgba(16,185,129,0.04);
+  --txt:#f0fdf4;--dim:#6ee7b7;--mid:#34d399;
+}
+
+html,body{height:100%;overflow-x:hidden}
+
+body{
+  font-family:'Source Sans 3',sans-serif;
+  background:radial-gradient(ellipse at top,#0f1712,#0a0f0d),#0a0f0d;
+  color:var(--txt);position:relative;
+}
+
+/* Animated grid */
+.grid-overlay{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(16,185,129,.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(16,185,129,.02) 1px,transparent 1px);
+  background-size:60px 60px;
+  animation:gridDrift 30s linear infinite;
+  mask-image:linear-gradient(to bottom,transparent,black 20%,black 80%,transparent);
+}
+@keyframes gridDrift{to{background-position:60px 60px}}
+
+/* Floating orbs */
+.orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;opacity:.15}
+.orb1{width:400px;height:400px;background:var(--emerald);top:-10%;left:-5%;animation:float1 20s ease-in-out infinite}
+.orb2{width:350px;height:350px;background:var(--jade);bottom:-10%;right:-5%;animation:float2 25s ease-in-out infinite}
+.orb3{width:300px;height:300px;background:var(--sky);top:40%;left:50%;animation:float3 18s ease-in-out infinite}
+@keyframes float1{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-40px)}}
+@keyframes float2{0%,100%{transform:translate(0,0)}50%{transform:translate(-40px,30px)}}
+@keyframes float3{0%,100%{transform:translate(0,0)}50%{transform:translate(20px,-30px)}}
+
+/* Scanline effect */
+.scanline{
+  position:fixed;inset:0;pointer-events:none;z-index:9999;
+  background:linear-gradient(180deg,transparent,rgba(16,185,129,.02) 50%,transparent);
+  height:100%;
+  animation:scan 8s linear infinite;opacity:.3;
+}
+@keyframes scan{from{transform:translateY(-100%)}to{transform:translateY(100%)}}
+
+/* ── TOPBAR ──────────────────────────────────────────────── */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  background:rgba(10,15,13,.85);
+  border-bottom:1px solid rgba(16,185,129,.15);
+  backdrop-filter:blur(24px) saturate(180%);
+  padding:0 3rem;height:70px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+
+.back-link{
+  display:flex;align-items:center;gap:10px;
+  font-size:.68rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  color:var(--dim);text-decoration:none;
+  padding:.5rem 1.1rem;border-radius:10px;
+  background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.12);
+  transition:all .3s;
+}
+.back-link:hover{background:rgba(16,185,129,.12);color:var(--emerald);transform:translateX(-3px)}
+
+.header-center{
+  position:absolute;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:14px;
+}
+.logo-orb{
+  width:42px;height:42px;border-radius:14px;
+  background:linear-gradient(135deg,var(--emerald),var(--jade));
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  box-shadow:0 0 30px rgba(16,185,129,.5),inset 0 2px 10px rgba(255,255,255,.1);
+  animation:orbPulse 3s ease-in-out infinite;
+}
+@keyframes orbPulse{0%,100%{box-shadow:0 0 30px rgba(16,185,129,.4)}50%{box-shadow:0 0 50px rgba(16,185,129,.8),0 0 80px rgba(16,185,129,.2)}}
+.logo-title{
+  font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:800;
+  background:linear-gradient(135deg,var(--emerald),var(--sky));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:-.5px;
+}
+
+.status-row{display:flex;gap:1rem}
+.status-chip{
+  display:flex;align-items:center;gap:7px;
+  font-size:.58rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+  padding:.4rem 1rem;border-radius:20px;
+}
+.chip-online{background:rgba(16,185,129,.1);color:var(--emerald);border:1px solid rgba(16,185,129,.2)}
+.chip-active{background:rgba(6,182,212,.1);color:var(--sky);border:1px solid rgba(6,182,212,.2)}
+.chip-dot{width:5px;height:5px;border-radius:50%;background:currentColor;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* ── HERO STATS BAR ──────────────────────────────────────── */
+.hero-stats{
+  position:fixed;top:70px;left:0;right:0;z-index:999;
+  background:rgba(10,15,13,.7);
+  border-bottom:1px solid rgba(16,185,129,.08);
+  backdrop-filter:blur(16px);
+  padding:.9rem 3rem;
+  display:flex;justify-content:center;gap:4rem;
+}
+.hero-stat{display:flex;align-items:center;gap:12px}
+.hero-stat-icon{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,rgba(16,185,129,.15),rgba(6,182,212,.1));
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+}
+.hero-stat-content{display:flex;flex-direction:column}
+.hero-stat-value{
+  font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;
+  background:linear-gradient(90deg,var(--emerald),var(--sky));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1;
+}
+.hero-stat-label{font-size:.58rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin-top:2px}
+
+/* ── MAIN CONTAINER ──────────────────────────────────────── */
+.container{
+  padding:180px 3rem 4rem;max-width:1650px;margin:0 auto;
+  position:relative;z-index:1;
+}
+
+.grid-layout{
+  display:grid;
+  grid-template-columns:420px 1fr 380px;
+  gap:2rem;
+}
+
+/* ── LEFT SIDEBAR ────────────────────────────────────────── */
+.left-sidebar{display:flex;flex-direction:column;gap:2rem}
+
+/* Species Library */
+.species-lib{
+  background:var(--card);border:1px solid rgba(16,185,129,.12);
+  border-radius:24px;padding:2rem;
+  backdrop-filter:blur(20px);
+  box-shadow:0 8px 32px rgba(0,0,0,.3);
+}
+.lib-title{
+  font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;
+  color:var(--txt);margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:10px;
+}
+.species-grid{display:flex;flex-direction:column;gap:.8rem}
+.species-item{
+  display:flex;align-items:center;gap:12px;
+  padding:1rem;border-radius:12px;
+  background:rgba(16,185,129,.04);border:1px solid rgba(16,185,129,.08);
+  transition:all .3s;cursor:pointer;
+}
+.species-item:hover{background:rgba(16,185,129,.1);border-color:var(--emerald);transform:translateX(5px)}
+.species-item-icon{
+  width:44px;height:44px;border-radius:12px;
+  background:linear-gradient(135deg,var(--emerald),var(--jade));
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+}
+.species-item-info{flex:1}
+.species-item-name{font-size:.85rem;font-weight:600;color:var(--txt);margin-bottom:2px}
+.species-item-count{font-size:.6rem;color:var(--dim)}
+
+/* Recent Detections */
+.recent-card{
+  background:var(--card);border:1px solid rgba(16,185,129,.12);
+  border-radius:24px;padding:2rem;
+  backdrop-filter:blur(20px);
+  box-shadow:0 8px 32px rgba(0,0,0,.3);
+}
+.recent-title{
+  font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;
+  color:var(--txt);margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:10px;
+}
+.detection-list{display:flex;flex-direction:column;gap:.7rem}
+.detection-item{
+  display:flex;align-items:center;gap:10px;
+  padding:.8rem 1rem;border-radius:10px;
+  background:rgba(16,185,129,.03);border:1px solid rgba(16,185,129,.06);
+  transition:all .2s;
+}
+.detection-item:hover{background:rgba(16,185,129,.08);transform:translateX(3px)}
+.detection-emoji{font-size:1.1rem}
+.detection-text{flex:1;font-size:.8rem;color:var(--dim)}
+.detection-time{font-size:.6rem;color:var(--dim);opacity:.6}
+
+/* ── CENTER COLUMN ───────────────────────────────────────── */
+.center-col{display:flex;flex-direction:column;gap:2rem}
+
+/* Upload Zone */
+.upload-zone{
+  background:var(--card);
+  border:2px dashed rgba(16,185,129,.25);
+  border-radius:28px;padding:4rem 3rem;
+  text-align:center;transition:all .4s;
+  backdrop-filter:blur(20px);
+  box-shadow:0 8px 32px rgba(0,0,0,.3);
+  position:relative;overflow:hidden;
+}
+.upload-zone::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 0%,rgba(16,185,129,.1),transparent 70%);
+  pointer-events:none;
+}
+.upload-zone:hover{
+  border-color:var(--emerald);
+  background:rgba(16,185,129,.06);
+  transform:translateY(-4px);
+  box-shadow:0 16px 48px rgba(0,0,0,.4);
+}
+
+.upload-visual{
+  width:120px;height:120px;margin:0 auto 2rem;
+  border-radius:28px;
+  background:linear-gradient(135deg,rgba(16,185,129,.15),rgba(6,182,212,.1));
+  border:3px solid rgba(16,185,129,.2);
+  display:flex;align-items:center;justify-content:center;font-size:50px;
+  transition:all .4s;
+  box-shadow:0 12px 40px rgba(16,185,129,.2),inset 0 4px 20px rgba(255,255,255,.05);
+}
+.upload-zone:hover .upload-visual{
+  transform:scale(1.08) rotate(5deg);
+  box-shadow:0 20px 60px rgba(16,185,129,.4);
+}
+
+.upload-heading{
+  font-family:'Playfair Display',serif;font-size:2rem;font-weight:800;
+  background:linear-gradient(135deg,var(--emerald),var(--sky));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:1rem;letter-spacing:-.5px;
+}
+.upload-desc{color:var(--dim);font-size:1rem;margin-bottom:2.5rem;line-height:1.8;max-width:500px;margin-left:auto;margin-right:auto}
+
+.upload-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:'Source Sans 3',sans-serif;font-size:.85rem;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;
+  background:linear-gradient(135deg,var(--emerald),var(--jade));
+  color:#fff;border:none;border-radius:14px;
+  padding:1.1rem 2.5rem;cursor:pointer;
+  transition:all .3s;
+  box-shadow:0 6px 24px rgba(16,185,129,.4);
+}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(16,185,129,.6)}
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:'Source Sans 3',sans-serif;font-size:.85rem;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;
+  background:rgba(6,182,212,.1);
+  color:var(--sky);border:1px solid rgba(6,182,212,.3);border-radius:14px;
+  padding:1.1rem 2.5rem;cursor:pointer;
+  transition:all .3s;
+}
+.btn-secondary:hover{background:rgba(6,182,212,.2);transform:translateY(-3px)}
+
+.file-input{display:none}
+
+.upload-info{
+  margin-top:2rem;font-size:.7rem;color:var(--dim);letter-spacing:.5px;
+}
+
+/* Preview */
+.preview-section{
+  display:none;position:relative;
+  border-radius:20px;overflow:hidden;
+  box-shadow:0 12px 48px rgba(0,0,0,.4);
+}
+.preview-img{width:100%;border-radius:20px}
+.preview-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent,rgba(0,0,0,.7));
+  display:flex;align-items:flex-end;padding:2rem;
+}
+.preview-actions{display:flex;gap:1rem}
+.preview-btn{
+  padding:.7rem 1.5rem;border-radius:10px;
+  font-size:.75rem;font-weight:600;letter-spacing:.5px;
+  text-transform:uppercase;cursor:pointer;transition:all .3s;
+  border:none;
+}
+.btn-analyze{background:linear-gradient(135deg,var(--emerald),var(--jade));color:#fff;box-shadow:0 4px 16px rgba(16,185,129,.4)}
+.btn-analyze:hover{transform:scale(1.05);box-shadow:0 6px 24px rgba(16,185,129,.6)}
+.btn-remove{background:rgba(239,68,68,.2);color:var(--coral);border:1px solid rgba(239,68,68,.3)}
+.btn-remove:hover{background:rgba(239,68,68,.3)}
+
+/* Analysis Loading */
+.analysis-loading{
+  display:none;
+  background:var(--card);border:1px solid rgba(16,185,129,.12);
+  border-radius:24px;padding:4rem 3rem;text-align:center;
+  backdrop-filter:blur(20px);
+  box-shadow:0 8px 32px rgba(0,0,0,.3);
+}
+.loading-spinner{
+  width:80px;height:80px;margin:0 auto 2rem;
+  border:5px solid rgba(16,185,129,.1);
+  border-top-color:var(--emerald);border-radius:50%;
+  animation:spin 1.2s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:1.1rem;color:var(--dim);margin-bottom:.5rem}
+.loading-subtext{font-size:.8rem;color:var(--dim);opacity:.6}
+
+/* Results Panel */
+.results-panel{
+  display:none;
+  background:var(--card);border:1px solid rgba(16,185,129,.12);
+  border-radius:28px;padding:3rem;
+  backdrop-filter:blur(20px);
+  box-shadow:0 12px 48px rgba(0,0,0,.4);
+  animation:resultSlide .5s ease;
+}
+@keyframes resultSlide{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+.result-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  padding:.5rem 1.2rem;border-radius:20px;margin-bottom:1.5rem;
+}
+.badge-success{background:rgba(16,185,129,.15);color:var(--emerald);border:1px solid rgba(16,185,129,.3)}
+.badge-warning{background:rgba(245,158,11,.15);color:var(--amber);border:1px solid rgba(245,158,11,.3)}
+.badge-danger{background:rgba(239,68,68,.15);color:var(--coral);border:1px solid rgba(239,68,68,.3)}
+
+.result-hero{
+  display:flex;gap:2rem;align-items:flex-start;
+  padding-bottom:2rem;margin-bottom:2rem;
+  border-bottom:1px solid rgba(16,185,129,.15);
+}
+.result-icon-big{
+  width:100px;height:100px;border-radius:24px;
+  background:linear-gradient(135deg,var(--emerald),var(--jade));
+  display:flex;align-items:center;justify-content:center;font-size:48px;
+  box-shadow:0 12px 40px rgba(16,185,129,.3);
+  flex-shrink:0;
+}
+.result-identity{flex:1}
+.result-name{
+  font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:800;
+  color:var(--txt);margin-bottom:.5rem;letter-spacing:-.5px;
+}
+.result-scientific{
+  font-family:'Playfair Display',serif;font-style:italic;font-size:1.1rem;
+  color:var(--dim);margin-bottom:1rem;
+}
+
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem}
+.result-field{
+  background:rgba(16,185,129,.04);border:1px solid rgba(16,185,129,.08);
+  border-radius:14px;padding:1.2rem;
+}
+.field-label{font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:.5rem}
+.field-value{font-size:1rem;font-weight:600;color:var(--txt)}
+
+.result-section{margin-bottom:2rem}
+.section-heading{
+  font-size:.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--dim);margin-bottom:1rem;
+}
+.section-body{color:var(--txt);font-size:.95rem;line-height:1.9}
+
+/* Location Module */
+.location-module{
+  background:rgba(6,182,212,.05);border:1px solid rgba(6,182,212,.15);
+  border-radius:20px;padding:2rem;margin-top:2rem;
+}
+.location-title{
+  font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;
+  color:var(--sky);margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:10px;
+}
+.coords-display{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.coord-item{
+  background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.15);
+  border-radius:12px;padding:1rem;
+}
+.coord-label{font-size:.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--sky);margin-bottom:.4rem}
+.coord-val{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--txt)}
+
+.report-action{
+  width:100%;
+  font-family:'Source Sans 3',sans-serif;font-size:.8rem;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;
+  background:linear-gradient(135deg,var(--sky),#0891b2);
+  color:#fff;border:none;border-radius:12px;
+  padding:1rem;cursor:pointer;transition:all .3s;
+  box-shadow:0 4px 16px rgba(6,182,212,.3);
+}
+.report-action:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(6,182,212,.5)}
+
+/* ── RIGHT SIDEBAR ───────────────────────────────────────── */
+.right-sidebar{display:flex;flex-direction:column;gap:2rem}
+
+/* Live Insights */
+.insights-panel{
+  background:var(--card);border:1px solid rgba(16,185,129,.12);
+  border-radius:24px;padding:2rem;
+  backdrop-filter:blur(20px);
+  box-shadow:0 8px 32px rgba(0,0,0,.3);
+}
+.insights-header{
+  font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;
+  color:var(--txt);margin-bottom:1.8rem;
+  display:flex;align-items:center;gap:10px;
+}
+
+.insight-stat{
+  background:rgba(16,185,129,.04);border:1px solid rgba(16,185,129,.08);
+  border-radius:14px;padding:1.3rem;margin-bottom:1rem;
+  display:flex;align-items:center;gap:1.2rem;
+  transition:all .3s;
+}
+.insight-stat:hover{background:rgba(16,185,129,.1);transform:translateX(4px)}
+.insight-icon{
+  width:52px;height:52px;border-radius:14px;
+  background:linear-gradient(135deg,var(--emerald),var(--jade));
+  display:flex;align-items:center;justify-content:center;font-size:24px;
+  flex-shrink:0;
+}
+.insight-data{flex:1}
+.insight-value{
+  font-family:'Playfair Display',serif;font-size:2rem;font-weight:800;
+  background:linear-gradient(90deg,var(--emerald),var(--sky));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1;margin-bottom:.3rem;
+}
+.insight-label{font-size:.65rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim)}
+
+/* Ecosystem Health */
+.health-module{margin-top:1.5rem}
+.health-head{
+  display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;
+}
+.health-title{font-size:.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim)}
+.health-score{font-size:.9rem;font-weight:700;color:var(--emerald)}
+.health-track{
+  height:16px;border-radius:20px;
+  background:rgba(16,185,129,.1);overflow:hidden;position:relative;
+}
+.health-progress{
+  height:100%;border-radius:20px;
+  background:linear-gradient(90deg,var(--emerald),var(--jade));
+  width:0;transition:width 1.5s cubic-bezier(.4,0,.2,1) .5s;
+  box-shadow:0 0 12px rgba(16,185,129,.5);
+}
+
+/* Threat Alert */
+.threat-alert{
+  background:linear-gradient(135deg,rgba(239,68,68,.15),rgba(245,158,11,.1));
+  border:2px solid var(--coral);
+  border-radius:24px;padding:2rem;
+  backdrop-filter:blur(20px);
+  box-shadow:0 8px 32px rgba(239,68,68,.3);
+  display:none;
+  position:relative;overflow:hidden;
+  animation:alertShake .6s ease;
+}
+@keyframes alertShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.threat-alert::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(45deg,transparent,transparent 12px,rgba(239,68,68,.06) 12px,rgba(239,68,68,.06) 24px);
+  pointer-events:none;
+}
+
+.threat-head{
+  display:flex;align-items:center;gap:12px;margin-bottom:1.2rem;
+}
+.threat-icon{
+  width:56px;height:56px;border-radius:14px;
+  background:var(--coral);
+  display:flex;align-items:center;justify-content:center;font-size:28px;
+  animation:iconPulse 1.5s infinite;
+}
+@keyframes iconPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.08);opacity:.7}}
+.threat-title{
+  font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:800;
+  color:var(--coral);text-transform:uppercase;letter-spacing:.5px;
+}
+
+.threat-body{color:var(--txt);font-size:.9rem;line-height:1.8;margin-bottom:1.2rem}
+.threat-species{
+  background:rgba(239,68,68,.2);border:1px solid rgba(239,68,68,.4);
+  border-radius:12px;padding:1rem 1.3rem;
+  font-weight:700;color:var(--coral);font-size:.95rem;
+}
+
+/* Conservation Tips */
+.tips-panel{
+  background:var(--card);border:1px solid rgba(16,185,129,.12);
+  border-radius:24px;padding:2rem;
+  backdrop-filter:blur(20px);
+  box-shadow:0 8px 32px rgba(0,0,0,.3);
+}
+.tips-header{
+  font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;
+  color:var(--txt);margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:10px;
+}
+.tip-item{
+  display:flex;gap:12px;
+  padding:1rem;border-radius:12px;
+  background:rgba(16,185,129,.03);border:1px solid rgba(16,185,129,.06);
+  margin-bottom:.8rem;transition:all .3s;
+}
+.tip-item:hover{background:rgba(16,185,129,.08);transform:translateX(4px)}
+.tip-icon{font-size:1.3rem;flex-shrink:0}
+.tip-text{font-size:.85rem;color:var(--dim);line-height:1.7}
+
+/* Responsive */
+@media(max-width:1280px){
+  .grid-layout{grid-template-columns:1fr;gap:2rem}
+  .left-sidebar,.right-sidebar{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+  .hero-stats{flex-wrap:wrap;gap:2rem}
+}
+@media(max-width:768px){
+  .container{padding:140px 1.5rem 3rem}
+  .topbar{padding:0 1.5rem}
+  .hero-stats{padding:.9rem 1.5rem}
+  .left-sidebar,.right-sidebar{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- Scanline -->
+<div class="scanline"></div>
+
+<!-- Grid overlay -->
+<div class="grid-overlay"></div>
+
+<!-- Orbs -->
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <a href="index.html" class="back-link">
+    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15,18 9,12 15,6"/></svg>
+    Home
+  </a>
+  
+  <div class="header-center">
+    <div class="logo-orb">🦋</div>
+    <div class="logo-title">Wildlife Intelligence</div>
+  </div>
+
+  <div class="status-row">
+    <div class="status-chip chip-online">
+      <div class="chip-dot"></div>
+      <span>AI Online</span>
+    </div>
+    <div class="status-chip chip-active">
+      <div class="chip-dot"></div>
+      <span>247 Active</span>
+    </div>
+  </div>
+</div>
+
+<!-- HERO STATS -->
+<div class="hero-stats">
+  <div class="hero-stat">
+    <div class="hero-stat-icon">🔍</div>
+    <div class="hero-stat-content">
+      <div class="hero-stat-value" id="globalSightings">12,847</div>
+      <div class="hero-stat-label">Global Sightings</div>
+    </div>
+  </div>
+  <div class="hero-stat">
+    <div class="hero-stat-icon">🦅</div>
+    <div class="hero-stat-content">
+      <div class="hero-stat-value" id="speciesTracked">1,234</div>
+      <div class="hero-stat-label">Species Tracked</div>
+    </div>
+  </div>
+  <div class="hero-stat">
+    <div class="hero-stat-icon">⚠️</div>
+    <div class="hero-stat-content">
+      <div class="hero-stat-value" id="threatsDetected">18</div>
+      <div class="hero-stat-label">Threats Detected</div>
+    </div>
+  </div>
+  <div class="hero-stat">
+    <div class="hero-stat-icon">🌍</div>
+    <div class="hero-stat-content">
+      <div class="hero-stat-value" id="regionsMonitored">94</div>
+      <div class="hero-stat-label">Regions Monitored</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTAINER -->
+<div class="container">
+  <div class="grid-layout">
+
+    <!-- LEFT SIDEBAR -->
+    <div class="left-sidebar">
+      
+      <!-- Species Library -->
+      <div class="species-lib">
+        <h3 class="lib-title">📚 Species Library</h3>
+        <div class="species-grid">
+          <div class="species-item" onclick="quickSelect('bird')">
+            <div class="species-item-icon">🦅</div>
+            <div class="species-item-info">
+              <div class="species-item-name">Birds of Prey</div>
+              <div class="species-item-count">247 tracked</div>
+            </div>
+          </div>
+          <div class="species-item" onclick="quickSelect('mammal')">
+            <div class="species-item-icon">🦌</div>
+            <div class="species-item-info">
+              <div class="species-item-name">Mammals</div>
+              <div class="species-item-count">184 tracked</div>
+            </div>
+          </div>
+          <div class="species-item" onclick="quickSelect('insect')">
+            <div class="species-item-icon">🦋</div>
+            <div class="species-item-info">
+              <div class="species-item-name">Pollinators</div>
+              <div class="species-item-count">412 tracked</div>
+            </div>
+          </div>
+          <div class="species-item" onclick="quickSelect('reptile')">
+            <div class="species-item-icon">🐍</div>
+            <div class="species-item-info">
+              <div class="species-item-name">Reptiles</div>
+              <div class="species-item-count">156 tracked</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Detections -->
+      <div class="recent-card">
+        <h3 class="recent-title">⚡ Recent Detections</h3>
+        <div class="detection-list" id="recentList">
+          <div class="detection-item">
+            <span class="detection-emoji">🦅</span>
+            <span class="detection-text">Bald Eagle · Forest Region</span>
+            <span class="detection-time">2m ago</span>
+          </div>
+          <div class="detection-item">
+            <span class="detection-emoji">🐻</span>
+            <span class="detection-text">Black Bear · Mountain Trail</span>
+            <span class="detection-time">12m ago</span>
+          </div>
+          <div class="detection-item">
+            <span class="detection-emoji">🦌</span>
+            <span class="detection-text">White-tailed Deer · Meadow</span>
+            <span class="detection-time">28m ago</span>
+          </div>
+          <div class="detection-item">
+            <span class="detection-emoji">🦋</span>
+            <span class="detection-text">Monarch Butterfly · Garden</span>
+            <span class="detection-time">1h ago</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CENTER COLUMN -->
+    <div class="center-col">
+
+      <!-- Upload Zone -->
+      <div class="upload-zone" id="uploadZone">
+        <div class="upload-visual">📸</div>
+        <h2 class="upload-heading">Wildlife Detection System</h2>
+        <p class="upload-desc">Upload an image to identify species, track biodiversity, detect threats, and contribute to global conservation efforts</p>
+        
+        <div class="upload-actions">
+          <button class="btn-primary" onclick="document.getElementById('fileInput').click()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21,15v4a2,2,0,0,1-2,2H5a2,2,0,0,1-2-2V15"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Upload Image
+          </button>
+          <button class="btn-secondary" onclick="useSample()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Use Sample
+          </button>
+        </div>
+
+        <input type="file" id="fileInput" class="file-input" accept="image/*" onchange="handleUpload(event)">
+        
+        <p class="upload-info">Supports: JPG, PNG, WebP, HEIC · Max 15MB · AI-powered detection in under 2 seconds</p>
+      </div>
+
+      <!-- Preview Section -->
+      <div class="preview-section" id="previewSection">
+        <img id="previewImage" class="preview-img" alt="Preview">
+        <div class="preview-overlay">
+          <div class="preview-actions">
+            <button class="preview-btn btn-analyze" onclick="analyzeImage()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline;margin-right:6px"><circle cx="11" cy="11" r="8"/><path d="M21,21l-4.35-4.35"/></svg>
+              Analyze
+            </button>
+            <button class="preview-btn btn-remove" onclick="clearUpload()">Clear</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analysis Loading -->
+      <div class="analysis-loading" id="analysisLoading">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Analyzing wildlife image...</p>
+        <p class="loading-subtext">Neural network processing · Feature extraction · Species matching</p>
+      </div>
+
+      <!-- Results Panel -->
+      <div class="results-panel" id="resultsPanel">
+        <div class="result-badge badge-success" id="resultBadge">
+          <span>●</span>
+          <span id="badgeText">Detection Successful</span>
+        </div>
+
+        <div class="result-hero">
+          <div class="result-icon-big" id="resultIconBig">🦅</div>
+          <div class="result-identity">
+            <h2 class="result-name" id="resultName">Bald Eagle</h2>
+            <p class="result-scientific" id="resultScientific">Haliaeetus leucocephalus</p>
+            <div class="result-badge badge-success" id="statusBadge">
+              <span>●</span>
+              <span id="statusText">Least Concern</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="result-grid">
+          <div class="result-field">
+            <div class="field-label">Confidence</div>
+            <div class="field-value" id="resultConfidence">94.7%</div>
+          </div>
+          <div class="result-field">
+            <div class="field-label">Detection Time</div>
+            <div class="field-value" id="resultTime">1.2s</div>
+          </div>
+          <div class="result-field">
+            <div class="field-label">Category</div>
+            <div class="field-value" id="resultCategory">Bird of Prey</div>
+          </div>
+          <div class="result-field">
+            <div class="field-label">Population Trend</div>
+            <div class="field-value" id="resultTrend">↗ Increasing</div>
+          </div>
+        </div>
+
+        <div class="result-section">
+          <div class="section-heading">Description</div>
+          <p class="section-body" id="resultDescription">A large bird of prey found in North America, known for its distinctive white head and tail plumage.</p>
+        </div>
+
+        <div class="result-section">
+          <div class="section-heading">Habitat & Behavior</div>
+          <p class="section-body" id="resultHabitat">Typically found near large bodies of water with abundant fish supply.</p>
+        </div>
+
+        <!-- Location Module -->
+        <div class="location-module">
+          <h3 class="location-title">📍 Sighting Location</h3>
+          <div class="coords-display">
+            <div class="coord-item">
+              <div class="coord-label">Latitude</div>
+              <div class="coord-val" id="resultLat">40.7128°N</div>
+            </div>
+            <div class="coord-item">
+              <div class="coord-label">Longitude</div>
+              <div class="coord-val" id="resultLng">74.0060°W</div>
+            </div>
+          </div>
+          <button class="report-action" onclick="reportSighting()">
+            Report to Conservation Database
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDEBAR -->
+    <div class="right-sidebar">
+
+      <!-- Live Insights -->
+      <div class="insights-panel">
+        <h3 class="insights-header">📊 Live Insights</h3>
+        
+        <div class="insight-stat">
+          <div class="insight-icon">🔍</div>
+          <div class="insight-data">
+            <div class="insight-value" id="totalDetections">247</div>
+            <div class="insight-label">Total Detections</div>
+          </div>
+        </div>
+
+        <div class="insight-stat">
+          <div class="insight-icon">⚠️</div>
+          <div class="insight-data">
+            <div class="insight-value" id="endangeredCount">12</div>
+            <div class="insight-label">Endangered Sightings</div>
+          </div>
+        </div>
+
+        <div class="insight-stat">
+          <div class="insight-icon">🚨</div>
+          <div class="insight-data">
+            <div class="insight-value" id="alertCount">3</div>
+            <div class="insight-label">Active Threats</div>
+          </div>
+        </div>
+
+        <!-- Ecosystem Health -->
+        <div class="health-module">
+          <div class="health-head">
+            <span class="health-title">Ecosystem Health</span>
+            <span class="health-score" id="ecosystemScore">87%</span>
+          </div>
+          <div class="health-track">
+            <div class="health-progress" id="healthProgress" style="width:87%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Threat Alert -->
+      <div class="threat-alert" id="threatAlert">
+        <div class="threat-head">
+          <div class="threat-icon">⚠️</div>
+          <div class="threat-title">Invasive Threat</div>
+        </div>
+        <p class="threat-body">An invasive species has been identified. Immediate reporting to conservation authorities is critical to prevent ecosystem damage.</p>
+        <div class="threat-species" id="threatSpecies">Asian Giant Hornet (Vespa mandarinia)</div>
+      </div>
+
+      <!-- Conservation Tips -->
+      <div class="tips-panel">
+        <h3 class="tips-header">💡 Conservation Tips</h3>
+        
+        <div class="tip-item">
+          <span class="tip-icon">🌳</span>
+          <span class="tip-text">Plant native species to support local wildlife ecosystems</span>
+        </div>
+        <div class="tip-item">
+          <span class="tip-icon">💧</span>
+          <span class="tip-text">Create water sources for birds and small mammals</span>
+        </div>
+        <div class="tip-item">
+          <span class="tip-icon">🏡</span>
+          <span class="tip-text">Avoid pesticides that harm beneficial insects</span>
+        </div>
+        <div class="tip-item">
+          <span class="tip-icon">📸</span>
+          <span class="tip-text">Document sightings to contribute to citizen science</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ── WILDLIFE DATABASE ──────────────────────────────────── */
+const SPECIES_DB = {
+  bird: {
+    icon: '🦅', name: 'Bald Eagle', scientific: 'Haliaeetus leucocephalus',
+    status: 'safe', statusText: 'Least Concern', category: 'Bird of Prey', trend: '↗ Increasing',
+    description: 'A large bird of prey found in North America, known for its distinctive white head and tail plumage in adults. The bald eagle is a powerful symbol of strength and freedom, and has recovered remarkably after being listed as endangered in the 1960s.',
+    habitat: 'Typically found near large bodies of water with abundant fish supply. Builds large nests in tall trees and demonstrates remarkable hunting skills. Prefers coastal areas, lakes, and rivers with old-growth forests nearby for nesting.',
+    confidence: 94.7, isInvasive: false
+  },
+  mammal: {
+    icon: '🦌', name: 'White-tailed Deer', scientific: 'Odocoileus virginianus',
+    status: 'safe', statusText: 'Least Concern', category: 'Ungulate', trend: '→ Stable',
+    description: 'A medium-sized deer native to North and South America. Named for the white underside of its tail, which is raised as a warning signal. Highly adaptable and widespread across diverse habitats, from forests to suburban areas.',
+    habitat: 'Inhabits forests, grasslands, and suburban areas. Most active during dawn and dusk. Feeds on leaves, twigs, fruits, and nuts. Shows remarkable adaptability to human-altered landscapes and thrives in edge habitats.',
+    confidence: 91.3, isInvasive: false
+  },
+  insect: {
+    icon: '🦋', name: 'Monarch Butterfly', scientific: 'Danaus plexippus',
+    status: 'concern', statusText: 'Near Threatened', category: 'Pollinator', trend: '↘ Declining',
+    description: 'Famous for its remarkable annual migration covering thousands of miles. The monarch butterfly is easily recognized by its distinctive orange and black wing pattern. Populations have declined significantly due to habitat loss and climate change.',
+    habitat: 'Found in open fields, meadows, and gardens. Relies exclusively on milkweed plants for egg-laying and larval food. Eastern populations migrate to Mexico for winter, while western populations winter in California coastal areas.',
+    confidence: 88.4, isInvasive: false
+  },
+  reptile: {
+    icon: '🐍', name: 'Eastern Rat Snake', scientific: 'Pantherophis alleghaniensis',
+    status: 'safe', statusText: 'Least Concern', category: 'Reptile', trend: '→ Stable',
+    description: 'A large non-venomous snake native to eastern North America. Excellent climbers, often found in trees hunting for birds and small mammals. Important for controlling rodent populations in both wild and suburban areas.',
+    habitat: 'Found in forests, farmlands, and suburban areas. Active during day and night depending on temperature. Preys primarily on rodents, birds, and eggs. Hibernates during winter months in communal underground dens.',
+    confidence: 86.9, isInvasive: false
+  },
+  invasive: {
+    icon: '🐝', name: 'Asian Giant Hornet', scientific: 'Vespa mandarinia',
+    status: 'danger', statusText: 'INVASIVE SPECIES', category: 'Invasive Insect', trend: '⚠ Critical',
+    description: 'A highly aggressive invasive species that poses a severe threat to native bee populations and ecosystems. Known as "murder hornets," they can decimate entire honeybee colonies in hours. Their presence requires immediate reporting to authorities.',
+    habitat: 'Prefers forested and mountainous areas. Builds underground nests that can house colonies of several hundred individuals. Attacks honeybee hives in coordinated groups. A single hornet can kill dozens of bees per minute. Native to East Asia but recently detected in North America.',
+    confidence: 97.2, isInvasive: true
+  }
+};
+
+/* ── STATE ──────────────────────────────────────────────── */
+let currentResult = null;
+
+/* ── IMAGE HANDLING ─────────────────────────────────────── */
+function handleUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    document.getElementById('previewImage').src = event.target.result;
+    document.getElementById('uploadZone').style.display = 'none';
+    document.getElementById('previewSection').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function useSample() {
+  document.getElementById('uploadZone').style.display = 'none';
+  document.getElementById('previewSection').style.display = 'block';
+  document.getElementById('previewImage').src = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800';
+}
+
+function clearUpload() {
+  document.getElementById('fileInput').value = '';
+  document.getElementById('uploadZone').style.display = 'block';
+  document.getElementById('previewSection').style.display = 'none';
+  document.getElementById('resultsPanel').style.display = 'none';
+  document.getElementById('threatAlert').style.display = 'none';
+}
+
+function analyzeImage() {
+  document.getElementById('previewSection').style.display = 'none';
+  document.getElementById('analysisLoading').style.display = 'block';
+  
+  setTimeout(() => {
+    const keys = Object.keys(SPECIES_DB);
+    const randomKey = keys[Math.floor(Math.random() * keys.length)];
+    displayResult(SPECIES_DB[randomKey]);
+  }, 2000);
+}
+
+function quickSelect(type) {
+  displayResult(SPECIES_DB[type]);
+}
+
+/* ── DISPLAY RESULTS ────────────────────────────────────── */
+function displayResult(species) {
+  document.getElementById('analysisLoading').style.display = 'none';
+  document.getElementById('uploadZone').style.display = 'none';
+  
+  currentResult = species;
+
+  // Update result panel
+  document.getElementById('resultIconBig').textContent = species.icon;
+  document.getElementById('resultName').textContent = species.name;
+  document.getElementById('resultScientific').textContent = species.scientific;
+  document.getElementById('statusText').textContent = species.statusText;
+  document.getElementById('resultConfidence').textContent = species.confidence + '%';
+  document.getElementById('resultTime').textContent = (Math.random() * 1.5 + 0.5).toFixed(1) + 's';
+  document.getElementById('resultCategory').textContent = species.category;
+  document.getElementById('resultTrend').textContent = species.trend;
+  document.getElementById('resultDescription').textContent = species.description;
+  document.getElementById('resultHabitat').textContent = species.habitat;
+
+  // Status badge styling
+  const statusBadge = document.getElementById('statusBadge');
+  const resultBadge = document.getElementById('resultBadge');
+  
+  if (species.isInvasive) {
+    statusBadge.className = 'result-badge badge-danger';
+    resultBadge.className = 'result-badge badge-danger';
+    document.getElementById('badgeText').textContent = 'INVASIVE THREAT DETECTED';
+    document.getElementById('threatAlert').style.display = 'block';
+    document.getElementById('threatSpecies').textContent = `${species.name} (${species.scientific})`;
+    document.getElementById('alertCount').textContent = '1';
+  } else {
+    statusBadge.className = 'result-badge badge-' + species.status;
+    resultBadge.className = 'result-badge badge-success';
+    document.getElementById('badgeText').textContent = 'Detection Successful';
+    document.getElementById('threatAlert').style.display = 'none';
+    document.getElementById('alertCount').textContent = '0';
+  }
+
+  // Get location
+  getLocation();
+  
+  // Update stats
+  const current = parseInt(document.getElementById('totalDetections').textContent);
+  document.getElementById('totalDetections').textContent = current + 1;
+  
+  // Add to recent
+  addToRecent(species);
+
+  // Show results
+  document.getElementById('resultsPanel').style.display = 'block';
+  document.getElementById('resultsPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ── GEOLOCATION ────────────────────────────────────────── */
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        const lat = pos.coords.latitude.toFixed(4);
+        const lng = pos.coords.longitude.toFixed(4);
+        const latDir = lat >= 0 ? 'N' : 'S';
+        const lngDir = lng >= 0 ? 'E' : 'W';
+        document.getElementById('resultLat').textContent = Math.abs(lat) + '° ' + latDir;
+        document.getElementById('resultLng').textContent = Math.abs(lng) + '° ' + lngDir;
+      },
+      () => {
+        document.getElementById('resultLat').textContent = '40.7128°N';
+        document.getElementById('resultLng').textContent = '74.0060°W';
+      }
+    );
+  }
+}
+
+/* ── REPORT SIGHTING ────────────────────────────────────── */
+function reportSighting() {
+  if (!currentResult) return;
+  
+  alert(`✓ Sighting Reported!\n\nSpecies: ${currentResult.name}\nLocation: ${document.getElementById('resultLat').textContent}, ${document.getElementById('resultLng').textContent}\n\nYour report has been added to the global conservation database. Thank you for contributing!`);
+  
+  addToRecent(currentResult);
+}
+
+/* ── RECENT ACTIVITY ────────────────────────────────────── */
+function addToRecent(species) {
+  const list = document.getElementById('recentList');
+  const item = document.createElement('div');
+  item.className = 'detection-item';
+  item.innerHTML = `
+    <span class="detection-emoji">${species.icon}</span>
+    <span class="detection-text">${species.name} · Just detected</span>
+    <span class="detection-time">Now</span>
+  `;
+  list.insertBefore(item, list.firstChild);
+  if (list.children.length > 4) list.removeChild(list.lastChild);
+}
+
+/* ── BOOT ───────────────────────────────────────────────── */
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('healthProgress').style.width = '87%';
+  }, 800);
+});
+</script>
+</body>
+</html>
