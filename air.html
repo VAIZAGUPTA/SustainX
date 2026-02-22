@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SustainX — Air Quality Analysis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green: #00d9a3;
+            --blue: #3b82f6;
+            --sky: #38bdf8;
+            --purple: #a78bfa;
+            --yellow: #fbbf24;
+            --orange: #fb923c;
+            --red: #ef4444;
+            --dark: #080c10;
+            --dark2: #0e1420;
+            --dark3: #141b26;
+            --card: rgba(255,255,255,0.035);
+            --border: rgba(255,255,255,0.07);
+            --text: #eef2f7;
+            --muted: #7a8fa8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #0a0e16 0%, #141b2a 50%, #0f1419 100%);
+            color: var(--text);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* ─── ANIMATED BACKGROUND ─── */
+        .sky-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            opacity: 0.15;
+        }
+
+        /* Floating particles (smog/dust simulation) */
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255,255,255,0.4), transparent);
+            border-radius: 50%;
+            animation: floatParticle linear infinite;
+            opacity: 0.3;
+        }
+        @keyframes floatParticle {
+            0% { transform: translateY(100vh) translateX(0) scale(0); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-20vh) translateX(50px) scale(1); opacity: 0; }
+        }
+
+        /* Wind streams */
+        .wind-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(56,189,248,0.3), transparent);
+            animation: windFlow linear infinite;
+        }
+        @keyframes windFlow {
+            0% { transform: translateX(-100%); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateX(200%); opacity: 0; }
+        }
+
+        /* ─── NAVBAR ─── */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 1.2rem 3rem;
+            background: rgba(8,12,16,0.88);
+            backdrop-filter: blur(28px);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .nav-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900; font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--green), var(--sky));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .nav-back {
+            display: flex; align-items: center; gap: 0.6rem;
+            color: var(--muted); text-decoration: none; font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        .nav-back:hover { color: var(--sky); }
+        .nav-badge {
+            background: rgba(56,189,248,0.12);
+            border: 1px solid rgba(56,189,248,0.3);
+            color: var(--sky);
+            padding: 0.35rem 1rem; border-radius: 999px;
+            font-size: 0.8rem; font-weight: 600;
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: 8rem 2rem 4rem;
+            position: relative; overflow: hidden;
+            text-align: center;
+        }
+
+        .hero-icon-float {
+            position: absolute;
+            font-size: 3rem;
+            animation: iconFloat 12s infinite ease-in-out;
+            opacity: 0.08;
+        }
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-40px) rotate(10deg); }
+        }
+
+        .hero-tag {
+            display: inline-flex; align-items: center; gap: 0.6rem;
+            background: rgba(56,189,248,0.1);
+            border: 1px solid rgba(56,189,248,0.25);
+            border-radius: 999px; padding: 0.5rem 1.3rem;
+            font-size: 0.82rem; color: var(--sky);
+            margin-bottom: 2rem; position: relative; z-index: 1;
+            animation: fadeUp 0.7s ease both;
+        }
+        .pulse-dot { 
+            width: 7px; height: 7px; 
+            background: var(--sky); 
+            border-radius: 50%; 
+            animation: pulse 1.5s infinite; 
+        }
+        @keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.3);opacity:0.5} }
+
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 5.5rem);
+            font-weight: 900; line-height: 1.05;
+            letter-spacing: -0.03em;
+            position: relative; z-index: 1;
+            animation: fadeUp 0.7s 0.1s ease both;
+            margin-bottom: 1.8rem;
+        }
+        .hero h1 em {
+            font-style: normal;
+            background: linear-gradient(135deg, var(--sky), var(--blue));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .hero-sub {
+            font-size: clamp(1rem, 1.8vw, 1.25rem);
+            color: var(--muted); max-width: 640px;
+            margin: 0 auto 3.5rem; line-height: 1.75;
+            position: relative; z-index: 1;
+            animation: fadeUp 0.7s 0.2s ease both;
+        }
+
+        /* Real-time AQI Display */
+        .aqi-display {
+            position: relative; z-index: 1;
+            animation: fadeUp 0.7s 0.3s ease both;
+            margin-bottom: 3rem;
+        }
+        .aqi-ring {
+            width: 220px; height: 220px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 180deg,
+                var(--green) 0deg 60deg,
+                var(--yellow) 60deg 120deg,
+                var(--orange) 120deg 180deg,
+                var(--red) 180deg 240deg,
+                #9333ea 240deg 360deg
+            );
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+            animation: rotateRing 20s linear infinite;
+        }
+        @keyframes rotateRing { to { transform: rotate(360deg); } }
+        .aqi-ring::before {
+            content: '';
+            position: absolute; inset: 8px;
+            background: var(--dark2);
+            border-radius: 50%;
+        }
+        .aqi-value {
+            position: relative; z-index: 2;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem; font-weight: 900;
+            background: linear-gradient(135deg, var(--sky), var(--blue));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .aqi-label {
+            font-size: 0.85rem; color: var(--muted); text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        /* ─── UPLOAD SECTION ─── */
+        .section {
+            padding: 6rem 2rem;
+            max-width: 1300px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em;
+            text-transform: uppercase; color: var(--sky);
+            margin-bottom: 1rem;
+        }
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.8rem, 3.5vw, 3rem);
+            font-weight: 900; letter-spacing: -0.025em;
+            margin-bottom: 1rem; line-height: 1.08;
+        }
+        .section-sub { color: var(--muted); font-size: 1.05rem; max-width: 580px; line-height: 1.7; }
+
+        /* Camera Upload */
+        .upload-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .upload-camera {
+            background: var(--card);
+            border: 2px dashed rgba(56,189,248,0.25);
+            border-radius: 28px;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative; overflow: hidden;
+        }
+        .upload-camera:hover {
+            border-color: var(--sky);
+            background: rgba(56,189,248,0.06);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(56,189,248,0.15);
+        }
+        .upload-camera input { display: none; }
+        .cam-icon-wrap {
+            width: 100px; height: 100px;
+            background: linear-gradient(135deg, rgba(56,189,248,0.15), rgba(59,130,246,0.05));
+            border: 1px solid rgba(56,189,248,0.2);
+            border-radius: 24px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3rem; margin: 0 auto 1.5rem;
+        }
+        .upload-camera h3 { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; margin-bottom: 0.7rem; }
+        .upload-camera p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+        .upload-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--sky), var(--blue));
+            color: #080c10; font-weight: 700; font-size: 0.95rem;
+            padding: 0.9rem 2.5rem; border-radius: 12px;
+            border: none; cursor: pointer;
+            transition: all 0.25s; box-shadow: 0 8px 30px rgba(56,189,248,0.3);
+        }
+        .upload-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(56,189,248,0.45); }
+
+        /* Location Input */
+        .location-input-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 3rem;
+        }
+        .location-input-card h3 { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; margin-bottom: 1.5rem; }
+        .input-group {
+            margin-bottom: 1.2rem;
+        }
+        .input-group label {
+            display: block; font-size: 0.85rem; color: var(--muted);
+            margin-bottom: 0.5rem; font-weight: 600;
+        }
+        .input-field {
+            width: 100%;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.9rem 1.2rem;
+            color: var(--text);
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: var(--sky);
+            background: rgba(56,189,248,0.05);
+        }
+        .gps-btn {
+            width: 100%;
+            background: rgba(56,189,248,0.1);
+            border: 1px solid rgba(56,189,248,0.25);
+            color: var(--sky);
+            padding: 0.9rem;
+            border-radius: 12px;
+            font-size: 0.9rem; font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+        }
+        .gps-btn:hover {
+            background: rgba(56,189,248,0.15);
+            border-color: var(--sky);
+        }
+
+        /* ─── AQI SCALE ─── */
+        .aqi-scale {
+            margin-top: 3rem;
+        }
+        .scale-bar {
+            height: 50px;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            margin-bottom: 1rem;
+        }
+        .scale-segment {
+            flex: 1;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.75rem; font-weight: 700;
+            color: rgba(0,0,0,0.8);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .scale-segment:hover { transform: scale(1.05); z-index: 2; }
+        .scale-labels {
+            display: flex; justify-content: space-between;
+            font-size: 0.8rem; color: var(--muted);
+        }
+
+        /* ─── METHODS GRID ─── */
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+        .method-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 2.2rem 2rem;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative; overflow: hidden;
+        }
+        .method-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--sky), var(--blue));
+            transform: scaleX(0); transition: transform 0.3s;
+        }
+        .method-card:hover::before { transform: scaleX(1); }
+        .method-card:hover {
+            border-color: var(--sky);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(56,189,248,0.15);
+        }
+        .method-icon {
+            font-size: 2.5rem; margin-bottom: 1rem;
+        }
+        .method-card h4 { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; margin-bottom: 0.6rem; }
+        .method-card p { color: var(--muted); font-size: 0.88rem; line-height: 1.65; }
+
+        /* ─── POLLUTANTS ─── */
+        .pollutants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+        .pollutant-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .pollutant-card:hover {
+            border-color: var(--sky);
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(56,189,248,0.12);
+        }
+        .pollutant-icon {
+            width: 70px; height: 70px;
+            margin: 0 auto 1rem;
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem;
+        }
+        .pollutant-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.95rem; font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+        .pollutant-formula {
+            font-size: 0.75rem; color: var(--muted);
+            margin-bottom: 0.8rem;
+        }
+        .pollutant-level {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem; font-weight: 900;
+        }
+
+        /* ─── HEALTH EFFECTS ─── */
+        .health-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        .health-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            position: relative; overflow: hidden;
+        }
+        .health-card::before {
+            content: '';
+            position: absolute; top: 0; right: 0;
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .health-emoji {
+            font-size: 3rem; margin-bottom: 1rem;
+        }
+        .health-card h4 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem; margin-bottom: 1rem;
+        }
+        .health-list {
+            list-style: none; padding: 0;
+        }
+        .health-list li {
+            padding: 0.6rem 0;
+            padding-left: 1.8rem;
+            position: relative;
+            color: var(--muted);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        .health-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--sky);
+            font-weight: 900;
+        }
+
+        /* ─── LIVE MAP ─── */
+        .live-map-section {
+            background: linear-gradient(135deg, var(--dark3), var(--dark2));
+            border-radius: 32px;
+            padding: 4rem;
+            margin-top: 2rem;
+            border: 1px solid var(--border);
+            position: relative; overflow: hidden;
+        }
+        .live-map-section::before {
+            content: '';
+            position: absolute; bottom: -150px; left: -150px;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(56,189,248,0.06) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .map-placeholder {
+            width: 100%;
+            height: 450px;
+            background: linear-gradient(135deg, #1a2332, #0f1419);
+            border-radius: 20px;
+            margin-top: 2rem;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            border: 1px solid var(--border);
+            position: relative; overflow: hidden;
+        }
+        .map-placeholder::before {
+            content: '';
+            position: absolute; inset: 0;
+            background:
+                repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(56,189,248,0.03) 50px, rgba(56,189,248,0.03) 51px),
+                repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(56,189,248,0.03) 50px, rgba(56,189,248,0.03) 51px);
+        }
+        .map-icon {
+            font-size: 5rem; margin-bottom: 1rem; position: relative;
+        }
+        .map-text {
+            font-size: 1.1rem; color: var(--muted); position: relative;
+        }
+
+        /* ─── STATS ROW ─── */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+        .stat-mini {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .stat-mini:hover {
+            border-color: var(--sky);
+            transform: translateY(-5px);
+            box-shadow: 0 16px 40px rgba(56,189,248,0.12);
+        }
+        .stat-icon { font-size: 2.2rem; margin-bottom: 0.8rem; }
+        .stat-num {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem; font-weight: 900;
+            background: linear-gradient(135deg, var(--sky), var(--blue));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .stat-lbl { font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; }
+
+        /* ─── CTA ─── */
+        .cta-box {
+            background: linear-gradient(135deg, rgba(56,189,248,0.1), rgba(59,130,246,0.07));
+            border: 1px solid rgba(56,189,248,0.2);
+            border-radius: 28px;
+            padding: 4rem;
+            text-align: center;
+            margin-top: 2rem;
+            position: relative; overflow: hidden;
+        }
+        .cta-box::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse 50% 50% at 50% 100%, rgba(56,189,248,0.08) 0%, transparent 70%);
+        }
+        .cta-box h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.8rem, 3vw, 2.8rem);
+            font-weight: 900; margin-bottom: 1rem; position: relative;
+        }
+        .cta-box p { color: var(--muted); font-size: 1rem; margin-bottom: 2.5rem; max-width: 520px; margin-left: auto; margin-right: auto; position: relative; }
+        .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; }
+        .cta-primary {
+            background: linear-gradient(135deg, var(--sky), var(--blue));
+            color: #080c10; font-weight: 700; font-size: 1rem;
+            padding: 1rem 2.8rem; border-radius: 14px; border: none;
+            cursor: pointer; transition: all 0.25s;
+            box-shadow: 0 8px 32px rgba(56,189,248,0.35);
+        }
+        .cta-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 44px rgba(56,189,248,0.5); }
+
+        /* ─── FOOTER ─── */
+        footer {
+            text-align: center; padding: 3rem 2rem;
+            color: var(--muted); font-size: 0.82rem;
+            border-top: 1px solid var(--border);
+        }
+        footer a { color: var(--sky); text-decoration: none; }
+
+        /* ─── TOAST ─── */
+        .toast {
+            position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(80px);
+            background: var(--dark3); border: 1px solid var(--sky);
+            color: var(--text); padding: 1rem 2rem; border-radius: 14px;
+            font-size: 0.9rem; z-index: 9999;
+            transition: transform 0.4s ease;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            display: flex; align-items: center; gap: 0.7rem;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+
+        /* ─── ANIMATIONS ─── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .reveal {
+            opacity: 0; transform: translateY(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            nav { padding: 1rem 1.5rem; }
+            .hero { padding: 7rem 1.5rem 3rem; }
+            .section { padding: 4rem 1.5rem; }
+            .upload-grid { grid-template-columns: 1fr; }
+            .health-grid { grid-template-columns: 1fr; }
+            .live-map-section { padding: 2.5rem 1.5rem; }
+            .cta-box { padding: 3rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Animated Sky Background -->
+<div class="sky-bg" id="skyBg"></div>
+
+<!-- NAVBAR -->
+<nav>
+    <a href="home.html" class="nav-back">← Back to SustainX</a>
+    <div class="nav-logo">🌿 SustainX</div>
+    <div class="nav-badge">🏙️ Air Quality</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <!-- Floating icons -->
+    <div class="hero-icon-float" style="top:15%;left:10%">☁️</div>
+    <div class="hero-icon-float" style="top:25%;left:88%;animation-delay:3s">💨</div>
+    <div class="hero-icon-float" style="top:65%;left:8%;animation-delay:6s">🏭</div>
+    <div class="hero-icon-float" style="top:70%;left:90%;animation-delay:2s">🌫️</div>
+    <div class="hero-icon-float" style="top:40%;left:5%;animation-delay:8s">🚗</div>
+
+    <div class="hero-tag">
+        <div class="pulse-dot"></div>
+        Real-Time · Image-Based · Crowdsourced
+    </div>
+
+    <h1>
+        Breathe Aware.<br>
+        Track <em>Air Quality</em><br>
+        From Photos.
+    </h1>
+
+    <p class="hero-sub">
+        Upload a photo of your skyline, street, or surroundings. Our AI estimates smog levels, dust concentration, and pollution severity — building a crowdsourced air quality database.
+    </p>
+
+    <!-- Real-time AQI Display -->
+    <div class="aqi-display">
+        <div class="aqi-ring">
+            <div class="aqi-value" id="heroAqi">87</div>
+        </div>
+        <div class="aqi-label">Current Local AQI Estimate</div>
+    </div>
+</section>
+
+<!-- UPLOAD SECTION -->
+<section class="section reveal">
+    <div class="section-label">Step 1 — Capture or Upload</div>
+    <div class="section-title">Analyze Air Quality from Photos</div>
+    <p class="section-sub">Take a photo of your sky, neighborhood, or surrounding air. Our AI analyzes haze, visibility, color tone, and particle density to estimate pollution levels.</p>
+
+    <div class="upload-grid">
+        <!-- Camera Upload -->
+        <div class="upload-camera" onclick="document.getElementById('photoInput').click()">
+            <input type="file" id="photoInput" accept="image/*">
+            <div class="cam-icon-wrap">📷</div>
+            <h3>Upload Sky Photo</h3>
+            <p>Capture outdoor scene with visible sky</p>
+            <button class="upload-btn" onclick="event.stopPropagation(); document.getElementById('photoInput').click()">Choose Photo</button>
+            <div style="margin-top:1rem;font-size:0.8rem;color:var(--muted)">JPG, PNG, HEIC • Up to 15MB</div>
+        </div>
+
+        <!-- Manual Location -->
+        <div class="location-input-card">
+            <h3>📍 Add Location Context</h3>
+            <div class="input-group">
+                <label>City / Area</label>
+                <input type="text" class="input-field" placeholder="e.g., Mumbai, Bengaluru" id="cityInput">
+            </div>
+            <div class="input-group">
+                <label>Time of Capture (Optional)</label>
+                <input type="time" class="input-field" id="timeInput">
+            </div>
+            <button class="gps-btn" onclick="getGPS()">
+                📡 Use GPS Location
+            </button>
+        </div>
+    </div>
+
+    <!-- AQI Scale Reference -->
+    <div class="aqi-scale reveal">
+        <div class="section-label" style="margin-top:3rem">AQI Scale Reference</div>
+        <div class="scale-bar">
+            <div class="scale-segment" style="background:#10b981">0-50 Good</div>
+            <div class="scale-segment" style="background:#fbbf24">51-100 Moderate</div>
+            <div class="scale-segment" style="background:#fb923c">101-150 Unhealthy</div>
+            <div class="scale-segment" style="background:#ef4444">151-200 Very Unhealthy</div>
+            <div class="scale-segment" style="background:#9333ea">200+ Hazardous</div>
+        </div>
+        <div class="scale-labels">
+            <span>Safe to breathe</span>
+            <span>Extreme caution advised</span>
+        </div>
+    </div>
+</section>
+
+<!-- DETECTION METHODS -->
+<section class="section reveal">
+    <div class="section-label">Analysis Methods</div>
+    <div class="section-title">How We Detect Air Quality</div>
+    <p class="section-sub">Multi-layered computer vision and atmospheric science algorithms analyze your photos.</p>
+
+    <div class="methods-grid">
+        <div class="method-card reveal">
+            <div class="method-icon">🔍</div>
+            <h4>Visual Haze Detection</h4>
+            <p>AI scans for atmospheric haze, fog, and smog layers by analyzing pixel clarity and contrast loss over distance.</p>
+        </div>
+        <div class="method-card reveal" style="transition-delay:0.1s">
+            <div class="method-icon">🌈</div>
+            <h4>Color Tone Analysis</h4>
+            <p>Yellowish or grayish sky tints indicate particulate matter. We map color shifts to PM2.5 and PM10 concentration estimates.</p>
+        </div>
+        <div class="method-card reveal" style="transition-delay:0.2s">
+            <div class="method-icon">👁️</div>
+            <h4>Visibility Index</h4>
+            <p>Measures how clearly distant objects appear. Poor visibility correlates strongly with high pollution levels.</p>
+        </div>
+        <div class="method-card reveal" style="transition-delay:0.3s">
+            <div class="method-icon">☀️</div>
+            <h4>Sun Diffusion</h4>
+            <p>Analyzes how sunlight scatters through the atmosphere. Heavy diffusion = more airborne particles blocking direct light.</p>
+        </div>
+        <div class="method-card reveal" style="transition-delay:0.4s">
+            <div class="method-icon">🏙️</div>
+            <h4>Urban Density Context</h4>
+            <p>Cross-references your location with traffic data, industrial zones, and historical pollution patterns for better accuracy.</p>
+        </div>
+        <div class="method-card reveal" style="transition-delay:0.5s">
+            <div class="method-icon">📊</div>
+            <h4>Crowdsourced Validation</h4>
+            <p>Compares your upload with other nearby reports in the same time window to validate and refine the AQI estimate.</p>
+        </div>
+    </div>
+</section>
+
+<!-- POLLUTANTS -->
+<section class="section reveal">
+    <div class="section-label">Tracked Pollutants</div>
+    <div class="section-title">What We Monitor</div>
+    <p class="section-sub">Key air pollutants our system identifies and estimates from photo analysis.</p>
+
+    <div class="pollutants-grid">
+        <div class="pollutant-card">
+            <div class="pollutant-icon" style="background:rgba(239,68,68,0.12)">💨</div>
+            <div class="pollutant-name">PM2.5</div>
+            <div class="pollutant-formula">Fine Particles</div>
+            <div class="pollutant-level" style="color:var(--red)">High</div>
+        </div>
+        <div class="pollutant-card">
+            <div class="pollutant-icon" style="background:rgba(245,158,11,0.12)">🌫️</div>
+            <div class="pollutant-name">PM10</div>
+            <div class="pollutant-formula">Coarse Dust</div>
+            <div class="pollutant-level" style="color:var(--orange)">Moderate</div>
+        </div>
+        <div class="pollutant-card">
+            <div class="pollutant-icon" style="background:rgba(59,130,246,0.12)">☁️</div>
+            <div class="pollutant-name">NO₂</div>
+            <div class="pollutant-formula">Nitrogen Dioxide</div>
+            <div class="pollutant-level" style="color:var(--blue)">Low</div>
+        </div>
+        <div class="pollutant-card">
+            <div class="pollutant-icon" style="background:rgba(16,185,129,0.12)">🍃</div>
+            <div class="pollutant-name">O₃</div>
+            <div class="pollutant-formula">Ozone</div>
+            <div class="pollutant-level" style="color:var(--green)">Good</div>
+        </div>
+        <div class="pollutant-card">
+            <div class="pollutant-icon" style="background:rgba(167,139,250,0.12)">🏭</div>
+            <div class="pollutant-name">SO₂</div>
+            <div class="pollutant-formula">Sulfur Dioxide</div>
+            <div class="pollutant-level" style="color:var(--purple)">Moderate</div>
+        </div>
+        <div class="pollutant-card">
+            <div class="pollutant-icon" style="background:rgba(251,146,60,0.12)">💨</div>
+            <div class="pollutant-name">CO</div>
+            <div class="pollutant-formula">Carbon Monoxide</div>
+            <div class="pollutant-level" style="color:var(--yellow)">Low</div>
+        </div>
+    </div>
+</section>
+
+<!-- HEALTH EFFECTS -->
+<section class="section reveal">
+    <div class="section-label">Health Impact</div>
+    <div class="section-title">Understanding the Effects</div>
+    <p class="section-sub">How poor air quality affects your body and what to watch for.</p>
+
+    <div class="health-grid">
+        <div class="health-card">
+            <div class="health-emoji">😷</div>
+            <h4>Short-Term Effects</h4>
+            <ul class="health-list">
+                <li>Eye, nose, and throat irritation</li>
+                <li>Coughing and difficulty breathing</li>
+                <li>Headaches and dizziness</li>
+                <li>Fatigue and reduced lung function</li>
+                <li>Asthma attacks in sensitive individuals</li>
+            </ul>
+        </div>
+        <div class="health-card">
+            <div class="health-emoji">🫁</div>
+            <h4>Long-Term Effects</h4>
+            <ul class="health-list">
+                <li>Chronic respiratory diseases (COPD, bronchitis)</li>
+                <li>Cardiovascular problems and heart disease</li>
+                <li>Lung cancer and reduced life expectancy</li>
+                <li>Developmental issues in children</li>
+                <li>Weakened immune system over time</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- LIVE CROWDSOURCED MAP -->
+<section class="section reveal">
+    <div class="live-map-section">
+        <div class="section-label">Crowdsourced Data</div>
+        <div class="section-title">Live Air Quality Heatmap</div>
+        <p class="section-sub">Every photo you upload gets geo-tagged and contributes to our real-time pollution map. See hotspots, trends, and community reports.</p>
+
+        <div class="map-placeholder">
+            <div class="map-icon">🗺️</div>
+            <div class="map-text">Interactive heatmap visualization (API integration)</div>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-mini">
+                <div class="stat-icon">📸</div>
+                <div class="stat-num" id="photoCount">24,812</div>
+                <div class="stat-lbl">Photos Analyzed</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-icon">🌍</div>
+                <div class="stat-num" id="cityCount">148</div>
+                <div class="stat-lbl">Cities Covered</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-icon">🔴</div>
+                <div class="stat-num" id="hotspotCount">37</div>
+                <div class="stat-lbl">High-Risk Zones</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-icon">👥</div>
+                <div class="stat-num" id="userCount">8,420</div>
+                <div class="stat-lbl">Active Contributors</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="section reveal">
+    <div class="cta-box">
+        <h2>Join the Air Quality Movement</h2>
+        <p>Upload your first photo today. Every snapshot helps build a cleaner, healthier planet.</p>
+        <div class="cta-btns">
+            <button class="cta-primary" onclick="document.getElementById('photoInput').click()">📷 Upload Photo Now</button>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <p>🌿 <strong>SustainX</strong> — Air Quality Analysis · <a href="home.html">← Back to Home</a> · Built for breathable cities</p>
+    <p style="margin-top:0.5rem">Powered by computer vision AI · Crowdsourced from 148 cities · Updated every 10 minutes</p>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+    <span id="toastIcon">✅</span>
+    <span id="toastMsg">Done!</span>
+</div>
+
+<script>
+    // ─── ANIMATED BACKGROUND ───
+    const skyBg = document.getElementById('skyBg');
+    
+    // Create floating particles
+    for (let i = 0; i < 30; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.width = p.style.height = (Math.random() * 8 + 3) + 'px';
+        p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+        p.style.animationDelay = Math.random() * 10 + 's';
+        skyBg.appendChild(p);
+    }
+
+    // Create wind lines
+    for (let i = 0; i < 8; i++) {
+        const w = document.createElement('div');
+        w.className = 'wind-line';
+        w.style.top = Math.random() * 100 + '%';
+        w.style.width = (Math.random() * 200 + 150) + 'px';
+        w.style.animationDuration = (Math.random() * 8 + 6) + 's';
+        w.style.animationDelay = Math.random() * 5 + 's';
+        skyBg.appendChild(w);
+    }
+
+    // ─── AQI COUNTER ANIMATION ───
+    function animateCounter(id, target) {
+        const el = document.getElementById(id);
+        let current = 0;
+        const increment = target / 100;
+        const timer = setInterval(() => {
+            current = Math.min(current + increment, target);
+            el.textContent = Math.floor(current);
+            if (current >= target) clearInterval(timer);
+        }, 20);
+    }
+
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            animateCounter('heroAqi', 87);
+            animateCounter('photoCount', 24812);
+            animateCounter('cityCount', 148);
+            animateCounter('hotspotCount', 37);
+            animateCounter('userCount', 8420);
+        }, 500);
+    });
+
+    // ─── SCROLL REVEAL ───
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) { e.target.classList.add('visible'); }
+        });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // ─── FILE UPLOAD ───
+    document.getElementById('photoInput').addEventListener('change', e => {
+        if (e.target.files[0]) {
+            processPhoto(e.target.files[0]);
+        }
+    });
+
+    function processPhoto(file) {
+        showToast('📸 Analyzing photo... AI processing started!');
+        // Simulate analysis
+        setTimeout(() => {
+            showToast('✅ AQI Estimated: 112 (Unhealthy for Sensitive Groups)');
+        }, 2500);
+    }
+
+    // ─── GPS LOCATION ───
+    function getGPS() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                pos => {
+                    showToast(`📍 Location detected: ${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`);
+                    document.getElementById('cityInput').value = 'Mumbai, Maharashtra';
+                },
+                () => showToast('❌ GPS permission denied. Please enter manually.')
+            );
+        } else {
+            showToast('❌ GPS not supported on this device.');
+        }
+    }
+
+    // ─── TOAST ───
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        document.getElementById('toastMsg').textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3500);
+    }
+</script>
+</body>
+</html>
