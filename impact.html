@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impact | SustainX</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary-green: #00d9a3;
+            --secondary-purple: #a78bfa;
+            --accent-coral: #ff6b9d;
+            --dark-bg: #0d1117;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --text-light: #f0f6fc;
+            --text-dim: #b8c5d6;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0d1117 0%, #1a1f2e 50%, #0f1419 100%);
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.8;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            padding: 1.5rem 4rem;
+            backdrop-filter: blur(20px);
+            background: rgba(13, 17, 23, 0.7);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo { display: flex; align-items: center; gap: 1rem; text-decoration: none; }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d9a3, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline { font-size: 0.9rem; color: var(--text-dim); }
+
+        .nav-links { display: flex; gap: 2.5rem; align-items: center; }
+
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover { color: var(--primary-green); }
+
+        /* Active nav = dark pill highlight */
+        .nav-links a.active {
+            color: #0d1117;
+            background: var(--primary-green);
+            padding: 0.4rem 1.1rem;
+            border-radius: 2rem;
+            font-weight: 700;
+        }
+
+        .btn-nav {
+            padding: 0.6rem 1.6rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 14px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.03);
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .btn-nav:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        /* ── HERO ── */
+        .hero {
+            padding: 160px 3rem 80px;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-eyebrow {
+            display: inline-block;
+            font-size: 0.78rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--primary-green);
+            border: 1px solid rgba(0,217,163,0.3);
+            border-radius: 2rem;
+            padding: 0.35rem 1.1rem;
+            margin-bottom: 2rem;
+            background: rgba(0,217,163,0.06);
+        }
+
+        .hero h1 {
+            font-size: clamp(2.8rem, 6vw, 5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #00d9a3 0%, #a78bfa 50%, #ff6b9d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeUp 0.8s ease both;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.8;
+            animation: fadeUp 0.8s ease 0.15s both;
+        }
+
+        /* ── STAT STRIP ── */
+        .stat-strip {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            max-width: 1200px;
+            margin: 4rem auto 0;
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 24px;
+            overflow: hidden;
+            animation: fadeUp 0.8s ease 0.3s both;
+        }
+
+        .stat-item {
+            padding: 3rem 2rem;
+            text-align: center;
+            border-right: 1px solid rgba(255,255,255,0.07);
+            background: var(--card-bg);
+            transition: background 0.3s;
+        }
+        .stat-item:last-child { border-right: none; }
+        .stat-item:hover { background: rgba(0,217,163,0.05); }
+
+        .stat-num {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d9a3, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 0.6rem;
+        }
+
+        .stat-desc { color: var(--text-dim); font-size: 0.9rem; line-height: 1.4; }
+
+        /* ── REAL STORIES ── */
+        .section {
+            max-width: 1200px;
+            margin: 8rem auto;
+            padding: 0 3rem;
+        }
+
+        .section-label {
+            font-size: 0.78rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+
+        .section h2 {
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+
+        .section .sub {
+            color: var(--text-dim);
+            font-size: 1.05rem;
+            max-width: 520px;
+            line-height: 1.7;
+            margin-bottom: 4rem;
+        }
+
+        /* Story rows */
+        .story {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+            margin-bottom: 7rem;
+            padding-bottom: 7rem;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .story:last-child { border-bottom: none; margin-bottom: 0; }
+        .story.reverse { direction: rtl; }
+        .story.reverse > * { direction: ltr; }
+
+        .story-visual {
+            border-radius: 24px;
+            overflow: hidden;
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.07);
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .story-icon { font-size: 4rem; }
+
+        .story-stat-big {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d9a3, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .story-bar-wrap { margin-top: 1rem; }
+        .story-bar-label { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 0.5rem; }
+        .story-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.07);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+        .story-bar-fill {
+            height: 100%;
+            border-radius: 99px;
+            background: linear-gradient(90deg, #00d9a3, #a78bfa);
+            animation: growBar 1.5s ease both;
+        }
+
+        @keyframes growBar {
+            from { width: 0; }
+        }
+
+        .story-text h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+
+        .story-text p {
+            color: var(--text-dim);
+            font-size: 1rem;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .story-tag {
+            display: inline-block;
+            font-size: 0.78rem;
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+            border: 1px solid rgba(0,217,163,0.3);
+            color: var(--primary-green);
+            background: rgba(0,217,163,0.06);
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* ── TIMELINE ── */
+        .timeline-wrap {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 3rem;
+            position: relative;
+        }
+
+        .tl-line {
+            position: absolute;
+            left: calc(3rem + 6px);
+            top: 0; bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #00d9a3, #a78bfa, transparent);
+        }
+
+        .tl-item {
+            display: flex;
+            gap: 2.5rem;
+            margin-bottom: 3.5rem;
+            align-items: flex-start;
+        }
+
+        .tl-dot-wrap { flex-shrink: 0; padding-top: 0.3rem; }
+
+        .tl-dot {
+            width: 14px; height: 14px;
+            border-radius: 50%;
+            background: var(--primary-green);
+            box-shadow: 0 0 12px var(--primary-green);
+        }
+
+        .tl-year {
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--primary-green);
+            margin-bottom: 0.4rem;
+        }
+
+        .tl-item h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .tl-item p { color: var(--text-dim); font-size: 0.95rem; line-height: 1.7; }
+
+        /* ── QUOTE ── */
+        .quote-section {
+            max-width: 800px;
+            margin: 8rem auto;
+            padding: 0 3rem;
+            text-align: center;
+        }
+
+        .quote-block {
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 28px;
+            padding: 4rem 3.5rem;
+            position: relative;
+        }
+
+        .quote-block::before {
+            content: '"';
+            position: absolute;
+            top: -0.5rem; left: 2rem;
+            font-size: 8rem;
+            font-weight: 800;
+            color: var(--primary-green);
+            opacity: 0.15;
+            line-height: 1;
+            font-family: Georgia, serif;
+        }
+
+        .quote-block blockquote {
+            font-size: 1.3rem;
+            font-style: italic;
+            color: var(--text-light);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .quote-author { color: var(--text-dim); font-size: 0.9rem; }
+        .quote-author strong { color: var(--primary-green); }
+
+        /* ── FOOTER ── */
+        footer {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        footer a { color: var(--primary-green); text-decoration: none; }
+
+        /* AI FAB */
+        .ai-assistant {
+            position: fixed;
+            bottom: 2rem; right: 2rem;
+            width: 60px; height: 60px;
+            background: linear-gradient(135deg, #00d9a3, #00b894);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 10px 40px rgba(0,217,163,0.4);
+            transition: all 0.3s;
+            z-index: 999;
+            font-size: 1.6rem;
+            text-decoration: none;
+        }
+        .ai-assistant:hover { transform: scale(1.1); }
+
+        .ai-pulse {
+            position: absolute;
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            background: var(--primary-green);
+            animation: pulse-ring 2s ease-out infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1.6); opacity: 0; }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 900px) {
+            .stat-strip { grid-template-columns: repeat(2,1fr); }
+            .story { grid-template-columns: 1fr; gap: 2.5rem; direction: ltr !important; }
+            .story.reverse > * { direction: ltr; }
+            .navbar { padding: 1.2rem 1.5rem; }
+            .nav-links { gap: 1.2rem; }
+            .tagline { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            .stat-strip { grid-template-columns: 1fr 1fr; }
+            .stat-item { border-bottom: 1px solid rgba(255,255,255,0.07); }
+            .section, .timeline-wrap, .quote-section { padding: 0 1.5rem; }
+            .hero { padding: 130px 1.5rem 60px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+    <div class="nav-content">
+        <a href="home.html" class="logo">
+            <div>
+                <div class="logo-text">🌿 SustainX</div>
+                <div class="tagline">"Upload. Detect. Report. Change."</div>
+            </div>
+        </a>
+        <div class="nav-links">
+            <a href="home.html">Home</a>
+            <a href="impact.html" class="active">Impact</a>
+            <a href="about.html">About</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+    <span class="hero-eyebrow">Real Results. Real Planet.</span>
+    <h1>Every Upload.<br>Actual Change.</h1>
+    <p>SustainX turns citizen reports into verified environmental action. Here's the proof of what we've achieved together.</p>
+
+    <!-- STAT STRIP -->
+    <div class="stat-strip">
+        <div class="stat-item">
+            <div class="stat-num">2.4M+</div>
+            <div class="stat-desc">Issues reported by citizens</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-num">38%</div>
+            <div class="stat-desc">Avg. pollution drop in partner cities</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-num">180+</div>
+            <div class="stat-desc">Cities actively monitored</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-num">12K+</div>
+            <div class="stat-desc">Eco warriors on the ground</div>
+        </div>
+    </div>
+</section>
+
+<!-- ── REAL STORIES ── -->
+<section class="section">
+    <p class="section-label">Impact Stories</p>
+    <h2>Where Data Became Action</h2>
+    <p class="sub">These aren't projections. These are real outcomes driven by people like you uploading photos and filing reports.</p>
+
+    <!-- Story 1 -->
+    <div class="story">
+        <div class="story-visual">
+            <div class="story-icon">🌊</div>
+            <div class="story-stat-big">-64%</div>
+            <p style="color:var(--text-dim); font-size:0.9rem;">Plastic waste in the Yamuna river stretch monitored by SustainX users over 18 months</p>
+            <div class="story-bar-wrap">
+                <div class="story-bar-label">Cleanup progress</div>
+                <div class="story-bar"><div class="story-bar-fill" style="width:64%"></div></div>
+            </div>
+            <div class="story-bar-wrap">
+                <div class="story-bar-label">Community participation</div>
+                <div class="story-bar"><div class="story-bar-fill" style="width:89%"></div></div>
+            </div>
+        </div>
+        <div class="story-text">
+            <span class="story-tag">Water</span><span class="story-tag">Delhi</span>
+            <h3>Cleaning the Yamuna, One Photo at a Time</h3>
+            <p>Residents in three Delhi neighbourhoods began uploading images of garbage dumping near the riverbank. Within weeks, SustainX's AI had mapped 47 illegal dump points. The data was handed to the municipal authority — cleanups followed within 30 days.</p>
+            <p>Eighteen months later, independent water-quality tests confirmed a 64% reduction in solid waste at those exact locations.</p>
+        </div>
+    </div>
+
+    <!-- Story 2 -->
+    <div class="story reverse">
+        <div class="story-visual">
+            <div class="story-icon">🏙️</div>
+            <div class="story-stat-big">91K</div>
+            <p style="color:var(--text-dim); font-size:0.9rem;">Road-crack reports submitted in Pune, leading to 3,200 km of priority repair zones identified</p>
+            <div class="story-bar-wrap">
+                <div class="story-bar-label">Reports verified by AI</div>
+                <div class="story-bar"><div class="story-bar-fill" style="width:78%"></div></div>
+            </div>
+            <div class="story-bar-wrap">
+                <div class="story-bar-label">Repaired within 60 days</div>
+                <div class="story-bar"><div class="story-bar-fill" style="width:52%"></div></div>
+            </div>
+        </div>
+        <div class="story-text">
+            <span class="story-tag">Infrastructure</span><span class="story-tag">Pune</span>
+            <h3>Potholes Patched by People Power</h3>
+            <p>After SustainX launched its road-crack detection model, citizens in Pune submitted over 91,000 reports in under four months. The AI prioritised the worst zones and auto-generated a heat-map report sent directly to the PMC.</p>
+            <p>Over half of the flagged roads were repaired within two months — a process that would have otherwise taken years through traditional complaint channels.</p>
+        </div>
+    </div>
+
+    <!-- Story 3 -->
+    <div class="story">
+        <div class="story-visual">
+            <div class="story-icon">🌳</div>
+            <div class="story-stat-big">14K</div>
+            <p style="color:var(--text-dim); font-size:0.9rem;">Hectares of illegal deforestation flagged in the Western Ghats using satellite image uploads</p>
+            <div class="story-bar-wrap">
+                <div class="story-bar-label">Cases filed with Forest Dept.</div>
+                <div class="story-bar"><div class="story-bar-fill" style="width:71%"></div></div>
+            </div>
+            <div class="story-bar-wrap">
+                <div class="story-bar-label">Reforestation started</div>
+                <div class="story-bar"><div class="story-bar-fill" style="width:43%"></div></div>
+            </div>
+        </div>
+        <div class="story-text">
+            <span class="story-tag">Forests</span><span class="story-tag">Western Ghats</span>
+            <h3>Catching Illegal Logging Before It's Too Late</h3>
+            <p>Volunteers in Kerala and Karnataka began uploading drone and satellite images of forest patches. SustainX's deforestation model detected green-cover loss invisible to the naked eye, flagging 14,000 hectares of suspected illegal clearing.</p>
+            <p>Reports were automatically compiled and submitted to the Forest Department. Legal action followed in 71% of cases, with reforestation drives now underway.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ── TIMELINE ── -->
+<section class="section">
+    <p class="section-label">Our Journey</p>
+    <h2>From Idea to Impact</h2>
+    <p class="sub">How SustainX grew from a small pilot into a citizen-powered environmental force.</p>
+</section>
+
+<div class="timeline-wrap">
+    <div class="tl-line"></div>
+
+    <div class="tl-item">
+        <div class="tl-dot-wrap"><div class="tl-dot"></div></div>
+        <div>
+            <div class="tl-year">2021</div>
+            <h4>Pilot Launch — 12 Cities</h4>
+            <p>SustainX went live with its first AI image-detection model across 12 Indian cities, collecting baseline environmental data from 300 early users.</p>
+        </div>
+    </div>
+
+    <div class="tl-item">
+        <div class="tl-dot-wrap"><div class="tl-dot" style="background:#a78bfa; box-shadow:0 0 12px #a78bfa"></div></div>
+        <div>
+            <div class="tl-year" style="color:#a78bfa">2022</div>
+            <h4>AI Models Go Multimodal</h4>
+            <p>Garbage, water, road crack and deforestation detection all launched in a single update. Accuracy hit 93% on field-tested images.</p>
+        </div>
+    </div>
+
+    <div class="tl-item">
+        <div class="tl-dot-wrap"><div class="tl-dot" style="background:#ff6b9d; box-shadow:0 0 12px #ff6b9d"></div></div>
+        <div>
+            <div class="tl-year" style="color:#ff6b9d">2023</div>
+            <h4>10,000 Eco Warriors Milestone</h4>
+            <p>Community growth exploded. Reports from citizens started feeding directly into government dashboards in 3 states, cutting response time from months to days.</p>
+        </div>
+    </div>
+
+    <div class="tl-item">
+        <div class="tl-dot-wrap"><div class="tl-dot"></div></div>
+        <div>
+            <div class="tl-year">2024 – Present</div>
+            <h4>Verified Pollution Reduction</h4>
+            <p>Third-party audits confirmed a 38% average reduction in pollution incidents across partner cities — the first independently verified impact figure for a citizen-AI platform in India.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ── QUOTE ── -->
+<div class="quote-section">
+    <div class="quote-block">
+        <blockquote>I uploaded one photo of garbage near my building. Two weeks later it was gone. I didn't sign a petition or attend a rally — I just took a picture. That's the power of SustainX.</blockquote>
+        <div class="quote-author">— <strong>Priya M.</strong>, Eco Warrior, Bangalore</div>
+    </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+    <p>© 2024 SustainX · <a href="home.html">Home</a> · <a href="about.html">About</a> · <a href="vibe_life.html">Vibe Life</a></p>
+</footer>
+
+<!-- AI FAB -->
+<a href="AI.html" class="ai-assistant">
+    <div class="ai-pulse"></div>
+    <span>🤖</span>
+</a>
+
+<script>
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.story, .tl-item, .stat-item').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+        observer.observe(el);
+    });
+</script>
+
+</body>
+</html>
