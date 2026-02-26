@@ -501,10 +501,10 @@
                 </div>
             </div>
             <div class="nav-links">
-               <button class="btn active" style="padding: 0.7rem 1.8rem; font-size: 0.95rem;">Get Started</button>
+                <a href="#features">Features</a>
                 <a href="#impact">Impact</a>
-                <a href="about.html">About</a>
-                
+                <a href="#about">About</a>
+                <button class="btn active" style="padding: 0.7rem 1.8rem; font-size: 0.95rem;">Get Started</button>
             </div>
         </div>
     </nav>
@@ -526,7 +526,7 @@
             </div>
 
             <div class="cta-buttons">
-               <button class="btn" id="earth-btn" onclick="scrollToFeature('ai-detection', 'earth-btn')">Upload & Detect</button>
+                <button class="btn" id="earth-btn" onclick="scrollToFeature('ai-detection', 'earth-btn')">Upload & Detect</button>
                 <button class="btn" id="mentor-btn" onclick="scrollToFeature('ai-mentor', 'mentor-btn')">AI + You</button>
             </div>
         </div>
@@ -555,35 +555,31 @@
         </div>
 
         <div class="features-grid">
-          <a href="imagedetect.html" style="text-decoration:none; color:inherit;">
-  <div class="feature-card" id="ai-detection">
+            <div class="feature-card" id="ai-detection">
                 <div class="feature-icon">📸</div>
                 <h3>Smart Image Detection</h3>
                 <p>Upload any environmental photo. Our AI instantly detects garbage, pollution, road cracks, deforestation, and more. Get real-time detection overlays with highlighted problem areas.</p>
             </div>
-          </a>
 
             <div class="feature-card" id="ai-mentor">
-                
                 <div class="feature-icon">🧠</div>
                 <h3>AI Eco Mentor</h3>
                 <p>Your personal AI sustainability advisor. Get instant answers about environmental issues, waste disposal, local pollution data, and personalized eco-action plans. Chat 24/7 with your intelligent guide.</p>
             </div>
-          
 
-            <div class="feature-card" onclick="window.location.href='garbage.html'" style="cursor:pointer;">
+            <div class="feature-card" onclick="window.location.href='garbage-detection.html'" style="cursor:pointer;">
                 <div class="feature-icon">🚮</div>
                 <h3>Garbage Detection</h3>
                 <p>Detect litter in parks, streets, and rivers. AI identifies trash piles, categorizes waste types, and generates cleanup priority zones. Turn every citizen into an eco-warrior.</p>
             </div>
 
-            <div class="feature-card" onclick="window.location.href='de.html'" style="cursor:pointer;"></div>
+            <div class="feature-card">
                 <div class="feature-icon">🌳</div>
                 <h3>Deforestation Monitoring</h3>
                 <p>Upload satellite or drone images. Detect illegal tree cutting, sparse green cover, and forest degradation. Track reforestation progress over time with AI-powered analysis.</p>
             </div>
 
-           <div class="feature-card" onclick="window.location.href='water.html'" style="cursor:pointer;">
+            <div class="feature-card">
                 <div class="feature-icon">💧</div>
                 <h3>Water Pollution Tracker</h3>
                 <p>Identify polluted water bodies from photos. AI detects trash, oil spills, foam, and algae blooms. Create water quality reports and alert local authorities automatically.</p>
@@ -595,17 +591,13 @@
                 <p>Estimate smog and dust levels from images. Upload photos to get pollution severity scores. Build a crowdsourced air quality database for your neighborhood.</p>
             </div>
 
-           <div class="feature-card" onclick="window.location.href='wildlife.html'" style="cursor:pointer;">
+            <div class="feature-card">
                 <div class="feature-icon">🦋</div>
                 <h3>Wildlife Monitoring</h3>
                 <p>Detect endangered species and invasive plants. Upload wildlife photos for instant species identification. Map biodiversity hotspots and track ecosystem health.</p>
             </div>
 
-<<<<<<< HEAD
-           <div class="feature-card" onclick="window.location.href='roadDetect.html'" style="cursor:pointer;">
-=======
             <div class="feature-card">
->>>>>>> 859674c (hey)
                 <div class="feature-icon">🛣️</div>
                 <h3>Road Crack Detection</h3>
                 <p>Identify infrastructure issues instantly. AI detects road cracks, potholes, and damaged pavements. Report problems directly to municipal authorities with location data.</p>
@@ -644,7 +636,7 @@
     <section class="cta-section">
         <h2>Ready to Create Your Impact?</h2>
         <p style="color: var(--text-dim); margin-bottom: 2rem; font-size: 1.2rem;">Join thousands making sustainability measurable</p>
-       <button class="btn active" style="font-size: 1.2rem; padding: 1.2rem 3rem;">Start Your Journey</button>
+        <button class="btn active" style="font-size: 1.2rem; padding: 1.2rem 3rem;">Start Your Journey</button>
     </section>
 
     <div class="ai-assistant" onclick="scrollToFeature('ai-mentor', 'mentor-btn')">
