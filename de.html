@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ForestGuard AI — Deforestation Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --g1:#00ff9d;--g2:#00d4aa;--g3:#7dd3fc;
+  --danger:#ff3b5c;--warn:#ff9500;
+  --bg:#030e08;--card:rgba(0,255,157,0.04);
+  --txt:#e0fff5;--dim:#5eead4;
+}
+
+body{
+  font-family:'Syne',sans-serif;
+  background:var(--bg);
+  color:var(--txt);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── ANIMATED BACKGROUND ── */
+.bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+
+.blob{
+  position:absolute;border-radius:50%;filter:blur(90px);opacity:.11;
+  animation:blobDrift 20s ease-in-out infinite;
+}
+.blob-1{width:600px;height:600px;background:radial-gradient(circle,#00ff9d,transparent);top:-150px;left:-100px;animation-delay:0s}
+.blob-2{width:500px;height:500px;background:radial-gradient(circle,#00d4aa,transparent);bottom:-100px;right:-80px;animation-delay:-7s}
+.blob-3{width:400px;height:400px;background:radial-gradient(circle,#7dd3fc,transparent);top:40%;left:50%;animation-delay:-14s}
+.blob-4{width:350px;height:350px;background:radial-gradient(circle,#00ff9d,transparent);bottom:20%;left:10%;animation-delay:-4s}
+@keyframes blobDrift{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-40px) scale(1.05)}66%{transform:translate(-20px,25px) scale(.95)}}
+
+.hex-grid{
+  position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpath d='M28 66L0 50V18L28 2l28 16v32z' fill='none' stroke='rgba(0,255,157,0.035)' stroke-width='1'/%3E%3Cpath d='M28 100L0 84V52l28-16 28 16v32z' fill='none' stroke='rgba(0,255,157,0.035)' stroke-width='1'/%3E%3C/svg%3E");
+  background-size:56px 100px;
+  animation:hexDrift 40s linear infinite;
+}
+@keyframes hexDrift{to{background-position:56px 100px}}
+
+.scanlines{
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,255,157,.006) 3px,rgba(0,255,157,.006) 4px);
+}
+
+@keyframes particleRise{
+  0%{transform:translateY(100vh) translateX(0) scale(0);opacity:0}
+  10%{opacity:.5}
+  90%{opacity:.25}
+  100%{transform:translateY(-20px) translateX(var(--drift)) scale(1.5);opacity:0}
+}
+.ptcl{
+  position:absolute;width:2px;height:2px;
+  background:var(--g1);border-radius:50%;
+  animation:particleRise var(--dur) ease-in infinite;
+  animation-delay:var(--delay);bottom:0;left:var(--x);
+}
+
+/* ── TOPBAR ── */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(3,14,8,.87);
+  border-bottom:1px solid rgba(0,255,157,.14);
+  backdrop-filter:blur(24px);
+  padding:0 3rem;height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.brand{display:flex;align-items:center;gap:14px}
+.brand-icon{
+  width:40px;height:40px;border-radius:10px;
+  background:linear-gradient(135deg,var(--g1),var(--g2));
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  box-shadow:0 0 22px rgba(0,255,157,.45);
+  animation:brandGlow 3s ease-in-out infinite;
+}
+@keyframes brandGlow{0%,100%{box-shadow:0 0 18px rgba(0,255,157,.35)}50%{box-shadow:0 0 38px rgba(0,255,157,.75)}}
+.brand-name{
+  font-family:'Space Mono',monospace;font-size:1.1rem;font-weight:700;
+  background:linear-gradient(90deg,var(--g1),var(--g3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:1px;
+}
+.brand-sub{font-size:.58rem;color:var(--dim);letter-spacing:3px;text-transform:uppercase;margin-top:2px}
+.nav-right{display:flex;align-items:center;gap:1.2rem}
+.live-badge{
+  display:flex;align-items:center;gap:7px;
+  font-family:'Space Mono',monospace;font-size:.58rem;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  background:rgba(0,255,157,.08);color:var(--g1);
+  border:1px solid rgba(0,255,157,.2);border-radius:20px;padding:.4rem 1rem;
+}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--g1);animation:blink 1.8s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.back-btn{
+  font-family:'Space Mono',monospace;font-size:.62rem;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;
+  background:rgba(0,255,157,.06);color:var(--dim);
+  border:1px solid rgba(0,255,157,.16);border-radius:8px;
+  padding:.45rem 1.1rem;text-decoration:none;
+  transition:all .25s;display:flex;align-items:center;gap:7px;
+}
+.back-btn:hover{background:rgba(0,255,157,.13);color:var(--g1);transform:translateX(-2px)}
+
+/* ── PAGE ── */
+.page{
+  padding:90px 3rem 4rem;max-width:1600px;margin:0 auto;
+  position:relative;z-index:1;
+  display:grid;
+  grid-template-columns:1fr 390px;
+  gap:2.5rem;
+  align-items:start;
+}
+
+/* ── LEFT COL ── */
+.main-col{display:flex;flex-direction:column;gap:2rem}
+
+.section-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'Space Mono',monospace;font-size:.58rem;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;color:var(--dim);
+}
+.section-tag::before{content:'';width:18px;height:1px;background:var(--g1)}
+
+/* ── UPLOAD ZONE ── */
+.upload-zone{
+  background:var(--card);
+  border:2px dashed rgba(0,255,157,.2);
+  border-radius:28px;
+  padding:6rem 3rem 5rem;
+  text-align:center;
+  backdrop-filter:blur(30px);
+  box-shadow:0 0 0 1px rgba(0,255,157,.04),0 20px 60px rgba(0,0,0,.6),inset 0 2px 40px rgba(0,255,157,.03);
+  transition:all .4s cubic-bezier(.16,1,.3,1);
+  position:relative;overflow:hidden;
+  cursor:pointer;
+}
+.upload-zone::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% -10%,rgba(0,255,157,.09),transparent 65%);
+  pointer-events:none;
+}
+.upload-zone:hover{
+  border-color:rgba(0,255,157,.5);
+  background:rgba(0,255,157,.06);
+  transform:translateY(-6px);
+  box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 60px rgba(0,255,157,.1),inset 0 2px 40px rgba(0,255,157,.05);
+}
+.upload-zone.drag-over{border-color:var(--g1);background:rgba(0,255,157,.1);transform:scale(1.01)}
+
+.upload-visual-wrap{
+  position:relative;width:150px;height:150px;margin:0 auto 3rem;
+}
+.ring{
+  position:absolute;inset:0;border-radius:50%;
+  border:2px solid rgba(0,255,157,.18);
+  animation:ringPulse 3s ease-in-out infinite;
+}
+.ring-2{
+  position:absolute;inset:-14px;border-radius:50%;
+  border:1px solid rgba(0,255,157,.09);
+  animation:ringPulse 3s ease-in-out infinite;animation-delay:-.6s;
+}
+.ring-3{
+  position:absolute;inset:-28px;border-radius:50%;
+  border:1px solid rgba(0,255,157,.05);
+  animation:ringPulse 3s ease-in-out infinite;animation-delay:-1.2s;
+}
+@keyframes ringPulse{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.06);opacity:.15}}
+.icon-orb{
+  width:100%;height:100%;border-radius:50%;
+  background:linear-gradient(135deg,rgba(0,255,157,.18),rgba(125,211,252,.1));
+  border:2px solid rgba(0,255,157,.28);
+  display:flex;align-items:center;justify-content:center;font-size:62px;
+  transition:all .4s;
+  box-shadow:0 10px 40px rgba(0,255,157,.2),inset 0 4px 20px rgba(255,255,255,.04);
+}
+.upload-zone:hover .icon-orb{transform:scale(1.08) rotate(-10deg);box-shadow:0 20px 60px rgba(0,255,157,.4)}
+
+.upload-title{
+  font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;
+  background:linear-gradient(135deg,var(--g1) 20%,var(--g3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:1.2rem;letter-spacing:-1px;line-height:1.1;
+}
+.upload-desc{
+  color:var(--dim);font-size:1rem;line-height:2;
+  max-width:540px;margin:0 auto 3rem;
+}
+.cta-btn{
+  display:inline-flex;align-items:center;gap:12px;
+  font-family:'Space Mono',monospace;font-size:.78rem;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  background:linear-gradient(135deg,var(--g1),var(--g2));
+  color:#030e08;border:none;border-radius:14px;
+  padding:1.2rem 3.5rem;cursor:pointer;
+  transition:all .3s;
+  box-shadow:0 8px 32px rgba(0,255,157,.4);
+  position:relative;overflow:hidden;
+}
+.cta-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
+  transform:translateX(-100%);transition:transform .5s;
+}
+.cta-btn:hover::before{transform:translateX(100%)}
+.cta-btn:hover{transform:translateY(-4px);box-shadow:0 16px 50px rgba(0,255,157,.6)}
+.upload-hint{
+  margin-top:2.2rem;
+  font-family:'Space Mono',monospace;font-size:.62rem;
+  color:rgba(94,234,212,.4);letter-spacing:2px;text-transform:uppercase;
+}
+.file-input{display:none}
+
+/* ── PREVIEW ── */
+.preview-section{
+  display:none;
+  border-radius:24px;overflow:hidden;
+  position:relative;
+  box-shadow:0 20px 70px rgba(0,0,0,.7),0 0 40px rgba(0,255,157,.07);
+  border:1px solid rgba(0,255,157,.16);
+}
+.preview-img{width:100%;display:block;max-height:540px;object-fit:cover}
+.preview-grad{
+  position:absolute;bottom:0;left:0;right:0;height:190px;
+  background:linear-gradient(0deg,rgba(3,14,8,.97) 0%,rgba(3,14,8,.55) 60%,transparent 100%);
+}
+.preview-bar{
+  position:absolute;bottom:2rem;left:2rem;right:2rem;
+  display:flex;gap:1rem;
+}
+.btn-run{
+  flex:1;font-family:'Space Mono',monospace;font-size:.72rem;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;
+  background:linear-gradient(135deg,var(--g1),var(--g2));
+  color:#030e08;border:none;border-radius:12px;
+  padding:1rem;cursor:pointer;transition:all .3s;
+  box-shadow:0 6px 24px rgba(0,255,157,.4);
+}
+.btn-run:hover{transform:scale(1.03);box-shadow:0 10px 36px rgba(0,255,157,.6)}
+.btn-reset{
+  padding:1rem 1.4rem;border-radius:12px;
+  background:rgba(255,59,92,.14);color:var(--danger);
+  border:1px solid rgba(255,59,92,.3);
+  font-family:'Space Mono',monospace;font-size:.72rem;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;
+  cursor:pointer;transition:all .3s;
+}
+.btn-reset:hover{background:rgba(255,59,92,.26)}
+
+/* ── LOADING ── */
+.loading-wrap{
+  display:none;
+  background:var(--card);border:1px solid rgba(0,255,157,.12);
+  border-radius:28px;padding:5rem 3rem;text-align:center;
+  backdrop-filter:blur(30px);box-shadow:0 16px 60px rgba(0,0,0,.5);
+}
+.spinner{
+  width:80px;height:80px;margin:0 auto 2.5rem;
+  border:5px solid rgba(0,255,157,.08);
+  border-top-color:var(--g1);border-radius:50%;
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-label{
+  font-family:'Space Mono',monospace;font-size:1rem;font-weight:700;
+  color:var(--g1);letter-spacing:2px;margin-bottom:.8rem;
+}
+.loading-sublabel{font-size:.82rem;color:var(--dim);line-height:1.9}
+
+/* ── REPORT ── */
+.report-wrap{
+  display:none;
+  background:var(--card);border:1px solid rgba(0,255,157,.12);
+  border-radius:28px;padding:3.5rem;
+  backdrop-filter:blur(30px);
+  box-shadow:0 20px 70px rgba(0,0,0,.65);
+  animation:reportIn .7s cubic-bezier(.16,1,.3,1);
+}
+@keyframes reportIn{from{opacity:0;transform:translateY(50px)}to{opacity:1;transform:translateY(0)}}
+
+.report-top{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-bottom:2.5rem;margin-bottom:2.5rem;
+  border-bottom:1px solid rgba(0,255,157,.12);
+}
+.report-heading{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--txt)}
+.risk-pill{
+  font-family:'Space Mono',monospace;font-size:.58rem;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  padding:.5rem 1.2rem;border-radius:20px;
+  display:flex;align-items:center;gap:7px;
+}
+.risk-low{background:rgba(0,255,157,.13);color:var(--g1);border:1px solid rgba(0,255,157,.32)}
+.risk-moderate{background:rgba(255,149,0,.13);color:var(--warn);border:1px solid rgba(255,149,0,.32)}
+.risk-high{background:rgba(255,59,92,.13);color:var(--danger);border:1px solid rgba(255,59,92,.32)}
+.risk-critical{
+  background:rgba(255,59,92,.2);color:var(--danger);border:2px solid var(--danger);
+  animation:critBlink 1.5s infinite;
+}
+@keyframes critBlink{0%,100%{box-shadow:0 0 12px rgba(255,59,92,.15)}50%{box-shadow:0 0 28px rgba(255,59,92,.55)}}
+
+.metrics-row{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-bottom:2.5rem;
+}
+.m-card{
+  background:rgba(0,255,157,.04);border:1px solid rgba(0,255,157,.09);
+  border-radius:14px;padding:1.4rem 1.2rem;transition:all .3s;
+}
+.m-card:hover{background:rgba(0,255,157,.09);transform:translateY(-2px)}
+.m-label{
+  font-family:'Space Mono',monospace;font-size:.55rem;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:.7rem;
+}
+.m-val{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800;color:var(--g1)}
+
+.rpt-block{margin-bottom:1.8rem}
+.rpt-label{
+  font-family:'Space Mono',monospace;font-size:.55rem;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:.7rem;
+}
+.rpt-val{
+  background:rgba(0,255,157,.04);border:1px solid rgba(0,255,157,.09);
+  border-radius:12px;padding:1.1rem 1.3rem;
+  color:var(--txt);font-size:.92rem;line-height:1.9;
+}
+
+/* ── SIDEBAR ── */
+.sidebar{display:flex;flex-direction:column;gap:2rem;position:sticky;top:90px}
+.card{
+  background:var(--card);border:1px solid rgba(0,255,157,.12);
+  border-radius:22px;padding:2.2rem;
+  backdrop-filter:blur(30px);box-shadow:0 10px 40px rgba(0,0,0,.5);
+}
+.card-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--txt);margin-bottom:1.5rem}
+.card-text{color:var(--dim);font-size:.86rem;line-height:1.9;margin-bottom:1.5rem}
+.cap-list{display:flex;flex-direction:column;gap:.75rem}
+.cap-item{display:flex;align-items:center;gap:10px;font-size:.83rem;color:var(--dim)}
+.cap-dot{width:6px;height:6px;border-radius:50%;background:var(--g1);flex-shrink:0}
+
+.stat-row{
+  display:flex;align-items:center;gap:1.1rem;
+  background:rgba(0,255,157,.04);border:1px solid rgba(0,255,157,.09);
+  border-radius:12px;padding:1.1rem;margin-bottom:.9rem;transition:all .3s;
+}
+.stat-row:hover{background:rgba(0,255,157,.08);transform:translateX(4px)}
+.stat-icon-box{
+  width:46px;height:46px;border-radius:10px;
+  background:linear-gradient(135deg,#0a5f38,#0d8050);
+  display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0;
+}
+.stat-num{font-family:'Space Mono',monospace;font-size:1.4rem;font-weight:700;color:var(--g1);line-height:1;margin-bottom:.3rem}
+.stat-lbl{font-size:.62rem;color:var(--dim);letter-spacing:.5px;text-transform:uppercase}
+
+.alert-card{
+  display:none;
+  background:linear-gradient(135deg,rgba(255,59,92,.12),rgba(255,149,0,.07));
+  border:2px solid var(--danger);border-radius:22px;padding:2rem;
+  animation:alertAppear .5s ease;position:relative;overflow:hidden;
+}
+@keyframes alertAppear{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+.alert-card::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(45deg,transparent,transparent 12px,rgba(255,59,92,.04) 12px,rgba(255,59,92,.04) 24px);
+  pointer-events:none;
+}
+.alert-head{display:flex;align-items:center;gap:12px;margin-bottom:1.2rem}
+.alert-badge{
+  width:48px;height:48px;border-radius:12px;background:var(--danger);
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+  animation:alertBadge 1.5s infinite;flex-shrink:0;
+}
+@keyframes alertBadge{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.alert-title{font-family:'Space Mono',monospace;font-size:.95rem;font-weight:700;color:var(--danger)}
+.alert-body{color:var(--txt);font-size:.84rem;line-height:1.9}
+
+@media(max-width:1100px){
+  .page{grid-template-columns:1fr}
+  .sidebar{position:static}
+  .metrics-row{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:680px){
+  .page{padding:85px 1.2rem 3rem}
+  .topbar{padding:0 1.2rem}
+  .upload-zone{padding:3.5rem 1.5rem 3rem}
+  .upload-title{font-size:1.8rem}
+  .metrics-row{grid-template-columns:1fr}
+  .report-wrap{padding:2rem}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-canvas">
+  <div class="hex-grid"></div>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+  <div class="scanlines"></div>
+</div>
+
+<script>
+[
+  {x:'7%',dur:'13s',delay:'0s',drift:'28px'},
+  {x:'19%',dur:'18s',delay:'3s',drift:'-20px'},
+  {x:'31%',dur:'15s',delay:'6s',drift:'14px'},
+  {x:'46%',dur:'21s',delay:'1s',drift:'-28px'},
+  {x:'59%',dur:'14s',delay:'8s',drift:'24px'},
+  {x:'73%',dur:'17s',delay:'4s',drift:'-18px'},
+  {x:'84%',dur:'12s',delay:'11s',drift:'20px'},
+  {x:'93%',dur:'19s',delay:'2s',drift:'-24px'},
+].forEach(p=>{
+  const el=document.createElement('div');
+  el.className='ptcl';
+  el.style.cssText=`left:${p.x};--dur:${p.dur};--delay:${p.delay};--drift:${p.drift}`;
+  document.querySelector('.bg-canvas').appendChild(el);
+});
+</script>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-icon">🌲</div>
+    <div>
+      <div class="brand-name">ForestGuard AI</div>
+      <div class="brand-sub">Deforestation Intelligence</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      <span>System Online</span>
+    </div>
+    <a href="home.html" class="back-btn">
+      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="15,18 9,12 15,6"/></svg>
+      Back
+    </a>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- LEFT MAIN -->
+  <div class="main-col">
+    <div class="section-tag">Forest Analysis Module</div>
+
+    <!-- UPLOAD -->
+    <div class="upload-zone" id="uploadZone"
+      onclick="document.getElementById('fileInput').click()"
+      ondragover="event.preventDefault();this.classList.add('drag-over')"
+      ondragleave="this.classList.remove('drag-over')"
+      ondrop="handleDrop(event)">
+
+      <div class="upload-visual-wrap">
+        <div class="ring-3"></div>
+        <div class="ring-2"></div>
+        <div class="ring"></div>
+        <div class="icon-orb">🛰️</div>
+      </div>
+
+      <h1 class="upload-title">Forest Image Analysis</h1>
+      <p class="upload-desc">Upload a satellite or drone image of any forest or landscape area. Our AI instantly detects deforestation patterns, illegal logging, vegetation health, and environmental risk levels.</p>
+
+      <button class="cta-btn" onclick="event.stopPropagation();document.getElementById('fileInput').click()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21,15v4a2,2,0,0,1-2,2H5a2,2,0,0,1-2-2V15"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Upload Forest Image
+      </button>
+
+      <input type="file" id="fileInput" class="file-input" accept="image/*" onchange="handleUpload(event)">
+      <p class="upload-hint">JPG · PNG · WEBP &nbsp;|&nbsp; Max 15 MB &nbsp;|&nbsp; Drag & Drop Supported</p>
+    </div>
+
+    <!-- PREVIEW -->
+    <div class="preview-section" id="previewSection">
+      <img id="previewImg" class="preview-img" alt="Forest preview">
+      <div class="preview-grad"></div>
+      <div class="preview-bar">
+        <button class="btn-run" onclick="analyzeImage()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline;margin-right:7px"><circle cx="11" cy="11" r="8"/><path d="M21,21l-4.35-4.35"/></svg>
+          Run AI Analysis
+        </button>
+        <button class="btn-reset" onclick="resetAll()">✕ Clear</button>
+      </div>
+    </div>
+
+    <!-- LOADING -->
+    <div class="loading-wrap" id="loadingWrap">
+      <div class="spinner"></div>
+      <p class="loading-label">Analyzing Imagery...</p>
+      <p class="loading-sublabel">Vegetation indexing · Canopy mapping · Threat detection · Generating report</p>
+    </div>
+
+    <!-- REPORT -->
+    <div class="report-wrap" id="reportWrap">
+      <div class="report-top">
+        <h2 class="report-heading">Environmental Report</h2>
+        <div class="risk-pill risk-low" id="riskPill">
+          <span>●</span>
+          <span id="riskLevelText">Low Risk</span>
+        </div>
+      </div>
+
+      <div class="metrics-row">
+        <div class="m-card"><div class="m-label">Forest Cover</div><div class="m-val" id="mForestCover">—</div></div>
+        <div class="m-card"><div class="m-label">Tree Density</div><div class="m-val" id="mTreeDensity">—</div></div>
+        <div class="m-card"><div class="m-label">Tree Loss</div><div class="m-val" id="mTreeLoss">—</div></div>
+        <div class="m-card"><div class="m-label">Fire Risk</div><div class="m-val" id="mFireRisk">—</div></div>
+      </div>
+
+      <div class="rpt-block">
+        <div class="rpt-label">Illegal Logging Indicators</div>
+        <div class="rpt-val" id="rLogging">—</div>
+      </div>
+      <div class="rpt-block">
+        <div class="rpt-label">Soil Degradation Assessment</div>
+        <div class="rpt-val" id="rSoil">—</div>
+      </div>
+      <div class="rpt-block">
+        <div class="rpt-label">Environmental Impact Summary</div>
+        <div class="rpt-val" id="rImpact">—</div>
+      </div>
+      <div class="rpt-block">
+        <div class="rpt-label">Recommended Action</div>
+        <div class="rpt-val" id="rAction">—</div>
+      </div>
+      <div class="rpt-block" style="margin-bottom:0">
+        <div class="rpt-label">AI Conclusion</div>
+        <div class="rpt-val" id="rConclusion">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <div class="card">
+      <h3 class="card-title">System Capabilities</h3>
+      <p class="card-text">ForestGuard AI uses pixel-level vegetation analysis and risk modeling to detect environmental threats from any forest imagery in seconds.</p>
+      <div class="cap-list">
+        <div class="cap-item"><div class="cap-dot"></div><span>Multi-spectral vegetation analysis</span></div>
+        <div class="cap-item"><div class="cap-dot"></div><span>Illegal logging pattern detection</span></div>
+        <div class="cap-item"><div class="cap-dot"></div><span>Soil degradation assessment</span></div>
+        <div class="cap-item"><div class="cap-dot"></div><span>Fire risk probability modeling</span></div>
+        <div class="cap-item"><div class="cap-dot"></div><span>Environmental impact prediction</span></div>
+        <div class="cap-item"><div class="cap-dot"></div><span>Authority alert generation</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title">Global Monitoring</h3>
+      <div class="stat-row">
+        <div class="stat-icon-box">🌲</div>
+        <div><div class="stat-num">4.2M</div><div class="stat-lbl">Hectares Protected</div></div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-icon-box">🚨</div>
+        <div><div class="stat-num">847</div><div class="stat-lbl">Threats Prevented</div></div>
+      </div>
+      <div class="stat-row" style="margin-bottom:0">
+        <div class="stat-icon-box">📊</div>
+        <div><div class="stat-num">98.4%</div><div class="stat-lbl">Detection Accuracy</div></div>
+      </div>
+    </div>
+
+    <div class="alert-card" id="alertCard">
+      <div class="alert-head">
+        <div class="alert-badge">⚠️</div>
+        <div class="alert-title">Critical Threat Detected</div>
+      </div>
+      <p class="alert-body">Severe deforestation or illegal logging has been identified. Immediate intervention is required. Notify environmental authorities without delay.</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let imgBase64 = null;
+
+function handleUpload(e){
+  const f = e.target.files[0];
+  if(!f) return;
+  if(!f.type.startsWith('image/')){ alert('Please upload an image file.'); return; }
+  if(f.size > 15*1024*1024){ alert('File must be under 15 MB.'); return; }
+  readFile(f);
+}
+function handleDrop(e){
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.remove('drag-over');
+  const f = e.dataTransfer.files[0];
+  if(f && f.type.startsWith('image/')) readFile(f);
+}
+function readFile(f){
+  const r = new FileReader();
+  r.onload = ev => {
+    imgBase64 = ev.target.result.split(',')[1];
+    document.getElementById('previewImg').src = ev.target.result;
+    show('previewSection'); hide('uploadZone');
+    hide('reportWrap'); hide('alertCard');
+  };
+  r.readAsDataURL(f);
+}
+function resetAll(){
+  document.getElementById('fileInput').value='';
+  imgBase64=null;
+  show('uploadZone'); hide('previewSection');
+  hide('loadingWrap'); hide('reportWrap'); hide('alertCard');
+}
+
+function analyzeImage(){
+  hide('previewSection'); show('loadingWrap');
+  hide('reportWrap'); hide('alertCard');
+
+  setTimeout(()=>{
+    const img = document.getElementById('previewImg');
+    const c = document.createElement('canvas');
+    const ctx = c.getContext('2d');
+    c.width = img.naturalWidth || 400;
+    c.height = img.naturalHeight || 300;
+    ctx.drawImage(img,0,0);
+    const px = ctx.getImageData(0,0,c.width,c.height).data;
+    const total = c.width * c.height;
+    let green=0,brown=0;
+    for(let i=0;i<px.length;i+=4){
+      const r=px[i],g=px[i+1],b=px[i+2];
+      if(g>r+20&&g>b+20) green++;
+      if(r>100&&g>50&&b<80) brown++;
+    }
+    const fc = ((green/total)*100).toFixed(1);
+    const se = ((brown/total)*100).toFixed(1);
+    const density = fc>60?'Dense':fc>30?'Moderate':'Sparse';
+    const risk = fc>70?'Low':fc>40?'Moderate':fc>20?'High':'Critical';
+    const fireRisk = se>40?'High':se>20?'Medium':'Low';
+    const treeLoss = (100-parseFloat(fc)).toFixed(1)+'%';
+    const soilLevel = se>30?'Severe':se>15?'Moderate':'Minimal';
+
+    set('mForestCover', fc+'%');
+    set('mTreeDensity', density);
+    set('mTreeLoss', treeLoss);
+    set('mFireRisk', fireRisk);
+    set('rLogging', fc<30
+      ? 'Large-scale canopy reduction detected. Possible clear-cutting or illegal logging activity present.'
+      : 'No significant illegal logging patterns identified in this imagery.');
+    set('rSoil', soilLevel + ` — Soil exposure estimated at ${se}% of visible area.`);
+    set('rImpact', `Analysis indicates ${density.toLowerCase()} forest structure with ${fc}% canopy cover. ${parseFloat(se)>20?'Significant soil exposure suggests ongoing land degradation.':'Vegetation appears generally intact.'}`);
+    set('rAction', risk==='Low'
+      ? 'Continue routine monitoring. Establish a baseline for future comparison cycles.'
+      : 'Deploy ground verification team immediately. Initiate conservation response protocol and escalate to relevant environmental agencies.');
+    set('rConclusion', `ForestGuard analysis complete. Environmental risk classified as ${risk.toUpperCase()}. ${risk!=='Low'?'Escalation and intervention strongly recommended.':'Ecosystem indicators appear stable.'}`);
+
+    const pill = document.getElementById('riskPill');
+    document.getElementById('riskLevelText').textContent = risk+' Risk';
+    pill.className = 'risk-pill risk-'+risk.toLowerCase();
+
+    if(risk==='High'||risk==='Critical') show('alertCard');
+
+    hide('loadingWrap'); show('reportWrap');
+    setTimeout(()=>document.getElementById('reportWrap').scrollIntoView({behavior:'smooth',block:'start'}),100);
+  }, 2200);
+}
+
+function show(id){document.getElementById(id).style.display='block'}
+function hide(id){document.getElementById(id).style.display='none'}
+function set(id,v){document.getElementById(id).textContent=v}
+</script>
+</body>
+</html>
