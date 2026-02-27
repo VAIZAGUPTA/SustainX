@@ -71,13 +71,9 @@ We welcome contributors! If you have ideas for new environmental modules, innova
 📬 Team
 
 Created with 💚 by:
-
 @VAIZAGUPTA
-
 @mrunali-jadhav
-
 @trishasketch7
-
 @Aish1828
 
 Together, building a greener digital future. 🌿✨
